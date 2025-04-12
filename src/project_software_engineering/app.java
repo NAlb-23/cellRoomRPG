@@ -4,7 +4,8 @@ public class app {
 
 	public static void main(String[] args) {
 		
-		app game = new app();
+		Driver.start();
+		
 	}
 
 }

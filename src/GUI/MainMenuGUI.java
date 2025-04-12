@@ -21,6 +21,12 @@ public class MainMenuGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final int EXIT = -1;
+	public static final int NEWSAVE = 1;
+	public static final int LOADSAVE = 0;
+
+	private int userChoice; 
+	
 	public MainMenuGUI() {
 		setupUI();
 	}
@@ -102,16 +108,24 @@ public class MainMenuGUI extends JFrame {
     }
 	
 	private void handleStartButton(ActionEvent e) {
-        // Handle start button action
+		userChoice = NEWSAVE;
+        this.dispose();
     }
 	
 	private void handleLoadButton(ActionEvent e) {
-        // Handle start button action
+		userChoice = LOADSAVE;
+		this.dispose();
     }
 	
 	private void handleExitButton(ActionEvent e) {
+		userChoice = EXIT;
         this.dispose();
     }
+	
+	public int getUserChoice() {
+	    return userChoice;
+	}
+
 	
 	 public static void main(String[] args) {
 	        SwingUtilities.invokeLater(() -> {

@@ -25,7 +25,13 @@ public class Player {
 		this.warmthlevel = true;
 		this.restLevel = true;
 	}
-	
+		
+	@Override
+	public String toString() {
+		return "Player [hungerlevel=" + hungerlevel + ", warmthlevel=" + warmthlevel + ", restLevel=" + restLevel
+				+ ", name=" + name + "]";
+	}
+
 	public boolean getHungerlevel() {
 		return hungerlevel;
 	}

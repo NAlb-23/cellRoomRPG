@@ -1,17 +1,25 @@
 package GUI;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import project_software_engineering.Driver;
 import project_software_engineering.Player;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
-public class TextGameUI {
+public class TextGameUI extends JFrame {
 
-	private JFrame frame;
 	private JPanel mainPanel;
 	private JTextArea textArea;
 	private JTextArea userInfo;
@@ -22,27 +30,28 @@ public class TextGameUI {
 	private JList<String> inventoryList;
 
 	public TextGameUI(Player user) {
+		super("Escape Room RPG");
 		this.user = user;
-		initializeFrame();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(600, 400);
+		setLayout(new BorderLayout());
+		setLocationRelativeTo(null);
+
+		initializeMainPanel();
 		initializeTextArea();
 		initializeInputPanel();
 		initializePlayerInfoPanel();
-		frame.setVisible(true);
-		displayMessage("Glad to see you’re up, "+user.getName()+". You’ve been out for a while…"
+
+		setVisible(true);
+
+		displayMessage("Glad to see you’re up, " + user.getName() + ". You’ve been out for a while…"
 				+ "\nWhy don’t you try to \"look around\"?");
 	}
 
-	private void initializeFrame() {
-		frame = new JFrame("Escape Room RPG");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 400);
-		frame.setLayout(new BorderLayout());
-		frame.setLocationRelativeTo(null);
-
-		// Create a main panel with margins
+	private void initializeMainPanel() {
 		mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		frame.add(mainPanel, BorderLayout.CENTER);
+		add(mainPanel, BorderLayout.CENTER);
 	}
 
 	private void initializeTextArea() {
@@ -59,12 +68,7 @@ public class TextGameUI {
 		inputField = new JTextField();
 		submitButton = new JButton("Submit");
 
-		submitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				handleUserInput();
-			}
-		});
+		submitButton.addActionListener(e -> handleUserInput());
 
 		inputPanel.add(inputField, BorderLayout.CENTER);
 		inputPanel.add(submitButton, BorderLayout.EAST);
@@ -84,9 +88,7 @@ public class TextGameUI {
 		playerInfoPanel.setPreferredSize(new Dimension(150, 150));
 		JPanel inventoryPanel = initializeInventoryPanel();
 
-		// Create a container panel for Player Info & Inventory
-		JPanel rightPanel = new JPanel();
-		rightPanel.setLayout(new BorderLayout());
+		JPanel rightPanel = new JPanel(new BorderLayout());
 		rightPanel.add(playerInfoPanel, BorderLayout.NORTH);
 		rightPanel.add(inventoryPanel, BorderLayout.SOUTH);
 
@@ -125,19 +127,12 @@ public class TextGameUI {
 	}
 
 	private void updatePlayerInfo() {
-		String hunger = new String();
-		if(user.getHungerlevel()) hunger = "Full";
-		else hunger = "hungry";
+		String hunger = user.getHungerlevel() ? "Full" : "Hungry";
+		String rest = user.getRestLevel() ? "Well rested" : "Tired";
+		String warmth = user.getWarmthlevel() ? "Warm" : "Cold";
+
 		userInfo.setText("Hunger: " + hunger);
-		
-		String rest = new String();
-		if(user.getRestLevel()) rest = "well rested";
-		else rest = "tired";
 		userInfo.append("\nRest: " + rest);
-		
-		String warmth = new String();
-		if(user.getWarmthlevel()) warmth = "Warm";
-		else warmth = "cold";
 		userInfo.append("\nWarmth: " + warmth);
 	}
 
@@ -148,68 +143,8 @@ public class TextGameUI {
 		}
 	}
 
-
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(300, 200);
-            frame.setLocationRelativeTo(null);
-            
-            JDialog dialog = new JDialog(frame, "Hello", true);
-            dialog.setLayout(new BorderLayout());
-            
-            JPanel contentPanel = new JPanel(new BorderLayout());
-            contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            
-            // Introduction text area
-            JTextArea introText = new JTextArea();
-            introText.setEditable(false);
-            introText.setLineWrap(true);
-            introText.setWrapStyleWord(true);
-            introText.setText("You slowly open your eyes and find yourself in a dimly lit cell.\n" +
-                    "You clutch your head as it aches and slowly get up from the floor.\n" +
-                    "You try to remember how you wound up here but to no avail.\n" +
-                    "You try to remember who you are…");
-            
-            introText.setBackground(frame.getBackground());
-            
-            JPanel textPanel = new JPanel(new BorderLayout());
-            textPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            textPanel.add(introText, BorderLayout.CENTER);
-            
-            // Input Panel
-            JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new FlowLayout());
-            inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            JLabel label = new JLabel("What is your name?");
-            JTextField textField = new JTextField(15);
-            JButton okButton = new JButton("OK");
-            
-            okButton.addActionListener(e -> {
-            	String userName = textField.getText().trim();
-                if (!userName.isEmpty()) {
-                    Player user = new Player(userName); 
-                    SwingUtilities.invokeLater(() -> new TextGameUI(user)); 
-                    dialog.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Please enter a name.");
-                }
-            });
-            
-            inputPanel.add(label);
-            inputPanel.add(textField);
-            inputPanel.add(okButton);
-            
-            // Adding panels to content panel
-            contentPanel.add(textPanel, BorderLayout.NORTH);
-            contentPanel.add(inputPanel, BorderLayout.SOUTH);
-            
-            dialog.add(contentPanel, BorderLayout.CENTER);
-            dialog.pack();
-            dialog.setLocationRelativeTo(frame);
-            dialog.setVisible(true);
-        });
-    }
-
+	public String getSave() {
+		
+		return textArea.getText();
+	}
 }

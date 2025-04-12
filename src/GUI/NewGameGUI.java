@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import utils.GUIBuilder;
 
 public class NewGameGUI extends JFrame {
+	
+	public String USERNAME = null;
+	public int BTNPRESS = -1;
     
     public NewGameGUI() {
         setupUI();
@@ -107,9 +110,9 @@ public class NewGameGUI extends JFrame {
     private void handleUserInput(JTextField textField) {
         String userName = textField.getText().trim();
         if (!userName.isEmpty()) {
-            Player user = new Player(userName);
-            SwingUtilities.invokeLater(() -> new TextGameUI(user));
-            dispose();
+        	BTNPRESS = 0;
+        	USERNAME = userName;
+        	this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Please enter a name.");
         }
@@ -122,6 +125,7 @@ public class NewGameGUI extends JFrame {
     }
     
     private void handleReturnButton (ActionEvent e) {
+    	BTNPRESS = 1;
     	this.dispose();
     }
 
