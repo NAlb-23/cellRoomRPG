@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -60,17 +62,17 @@ public class GUIBuilder {
 	 * @return The resized ImageIcon.
 	 */
 	public static ImageIcon resizeImage(ImageIcon imageIcon, int width, int height) {
-	    Image image = imageIcon.getImage(); // Get the Image object from ImageIcon
-	    Image resizedImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-	    return new ImageIcon(resizedImage); // Create a new ImageIcon with the resized Image
+		Image image = imageIcon.getImage(); // Get the Image object from ImageIcon
+		Image resizedImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		return new ImageIcon(resizedImage); // Create a new ImageIcon with the resized Image
 	}
 
-	 // Utility method to resize ImageIcon
-    public static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resizedImg);
-    }
+	// Utility method to resize ImageIcon
+	public static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
+		Image img = icon.getImage();
+		Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		return new ImageIcon(resizedImg);
+	}
 
 
 	/**
@@ -98,6 +100,65 @@ public class GUIBuilder {
 		return button;
 	}
 
+	// New method to create the exit button
+	public static JButton createIconedButton(
+			String title,
+			ImageIcon imageIcon, 
+			Color color, 
+			ActionListener e, 
+			String hint, 
+			boolean isDefaultEnter) 
+	{
+		JButton xButton = new JButton(title, imageIcon);
+
+		xButton.setBackground(color);
+		xButton.setBorder(null);
+		xButton.setFocusPainted(false);
+		xButton.setBorderPainted(false);
+		xButton.setContentAreaFilled(false);
+		
+
+		// Add mouse listener to change cursor
+		xButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// Change the cursor to hand cursor when hovering over the button
+				xButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// Reset the cursor to default when the mouse leaves the button
+				xButton.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+
+		// Add action listener for the button
+		xButton.addActionListener(e);
+		
+		if(hint != null) {
+			xButton.setToolTipText(hint);
+			
+		}
+		
+		if(isDefaultEnter) {
+			@SuppressWarnings("serial")
+			AbstractAction buttonAction = new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// Add your action code here
+					xButton.doClick(); // Simulate a button click
+				}
+			};
+			
+			xButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+					KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "clickButton");
+			xButton.getActionMap().put("clickButton", buttonAction);
+		}
+
+		return xButton;
+	}
+
 
 	/**
 	 * Creates a JButton with the specified text, centered within its container.
@@ -112,7 +173,7 @@ public class GUIBuilder {
 		button.addActionListener(actionListener);
 		return button;
 	}
-	
+
 
 	/**
 	 * Creates and adds labeled JTextFields to a JPanel.
@@ -135,7 +196,7 @@ public class GUIBuilder {
 		}
 		return panel;
 	}
-	
+
 	/**
 	 * Creates and adds labeled JTextFields to a JPanel.
 	 *
@@ -145,7 +206,7 @@ public class GUIBuilder {
 	 * @return the panel that was created
 	 */
 	public static JPanel createLabeledLoginFields(JTextField username, JPasswordField password) {
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(new JLabel("Username: "));
@@ -233,24 +294,24 @@ public class GUIBuilder {
 	}
 
 	public static JPanel createHorizontalCenteredButtonPanel(int horizontalSpacing, int leftPadding, int rightPadding, JButton... buttons) {
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Set horizontal layout
-        
-        buttonPanel.add(Box.createRigidArea(new Dimension(leftPadding, 0))); // Left padding
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Set horizontal layout
 
-        for (int i = 0; i < buttons.length; i++) {
-            buttonPanel.add(buttons[i]);
-            if (i < buttons.length - 1) {
-                buttonPanel.add(Box.createRigidArea(new Dimension(horizontalSpacing, 0))); // Spacing between buttons
-            }
-        }
+		buttonPanel.add(Box.createRigidArea(new Dimension(leftPadding, 0))); // Left padding
 
-        buttonPanel.add(Box.createRigidArea(new Dimension(rightPadding, 0))); // Right padding
-        buttonPanel.setBackground(new Color(200, 220, 240));
+		for (int i = 0; i < buttons.length; i++) {
+			buttonPanel.add(buttons[i]);
+			if (i < buttons.length - 1) {
+				buttonPanel.add(Box.createRigidArea(new Dimension(horizontalSpacing, 0))); // Spacing between buttons
+			}
+		}
 
-        return buttonPanel;
-    }
-	
+		buttonPanel.add(Box.createRigidArea(new Dimension(rightPadding, 0))); // Right padding
+		buttonPanel.setBackground(new Color(200, 220, 240));
+
+		return buttonPanel;
+	}
+
 	/**
 	 * Creates a JPanel with a grid layout containing the specified JButtons.
 	 *
@@ -357,10 +418,33 @@ public class GUIBuilder {
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)); // Add a bottom border for the header
 		headerPanel.setBackground(new Color(200, 220, 240));
-		
+
 		headerPanel.add(title);
 		return headerPanel;
 	}
+
+	public static JPanel createHeaderPanel(JLabel title, Color color, JButton... buttons) {
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BorderLayout()); // Use BorderLayout for better control over placement
+		headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)); 
+		headerPanel.setBackground(color);
+
+		headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+
+		// Create button panel and add buttons
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBackground(color); // Make sure button panel has the same color too
+		for (JButton button : buttons) {
+			buttonPanel.add(button);
+		}
+
+		// Add components to header panel
+		headerPanel.add(title, BorderLayout.WEST);
+		headerPanel.add(buttonPanel, BorderLayout.EAST);
+
+		return headerPanel;
+	}
+
 
 
 

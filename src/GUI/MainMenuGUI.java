@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import utils.GUIBuilder;
+import utils.RESOURCES;
 
 
 public class MainMenuGUI extends JFrame {
@@ -60,8 +61,7 @@ public class MainMenuGUI extends JFrame {
 	private JPanel createButtonPanel() {
 		JButton startButton = new JButton(
 				 GUIBuilder.getPaddedHTMLLabel("Start New Game", 80), 
-				 GUIBuilder.resizeImageIcon(new ImageIcon("icons8-add-48.png"), 
-						 20,20));
+				 RESOURCES.NEWGAME_ICON);
 		 startButton.addActionListener(this::handleStartButton);
 		 startButton.setBackground(new Color(101, 67, 33));
 		 startButton.setForeground(Color.white);
@@ -70,8 +70,7 @@ public class MainMenuGUI extends JFrame {
 		 
 		 JButton loadButton = new JButton(
 				 GUIBuilder.getPaddedHTMLLabel("Load Saved Game", 80), 
-				 GUIBuilder.resizeImageIcon(new ImageIcon("icons8-oval-loop-48.png"), 
-						 20,20));
+				RESOURCES.LOAD_ICON);
 		 loadButton.addActionListener(this::handleLoadButton);
 		 loadButton.setBackground(new Color(101, 67, 33));
 		 loadButton.setForeground(Color.white);
@@ -80,8 +79,7 @@ public class MainMenuGUI extends JFrame {
 		 
 		 JButton ExitButton = new JButton(
 				 GUIBuilder.getPaddedHTMLLabel("Exit", 80), 
-				 GUIBuilder.resizeImageIcon(new ImageIcon("icons8-exit-48.png"), 
-						 20,20));
+				 RESOURCES.EXIT_ICON);
 		 ExitButton.addActionListener(this::handleExitButton);
 		 ExitButton.setBackground(new Color(101, 67, 33));
 		 ExitButton.setForeground(Color.white);

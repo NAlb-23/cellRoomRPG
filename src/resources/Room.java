@@ -6,7 +6,6 @@ import java.util.List;
 public class Room {
     private String name;
     private String description;
-    private List<Item> items = new ArrayList<>();
     private List<POI> pois = new ArrayList<>();
 
     public Room(String name, String description) {
@@ -31,21 +30,24 @@ public class Room {
         this.description = description;
     }
 
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
     public List<POI> getPois() {
         return pois;
+    }
+    
+    public String getlistofPOINames() {
+    	StringBuilder sb = new StringBuilder();
+    	for(POI poi: pois) {
+    		sb.append(poi.getName()+"\n");
+    	}
+        return sb.toString();
     }
 
     public void setPois(List<POI> pois) {
         this.pois = pois;
     }
+
+	public void addPOI(POI poi) {
+		this.pois.add(poi);
+	}
 
 }

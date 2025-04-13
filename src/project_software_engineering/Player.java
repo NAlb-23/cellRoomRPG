@@ -1,6 +1,7 @@
 package project_software_engineering;
 
 import resources.Room;
+import utils.RESOURCES;
 
 public class Player {
 	private boolean hungerlevel; 
@@ -9,6 +10,7 @@ public class Player {
 	
 	private String name;
 	private Room currentRoom;
+	private RESOURCES.Status status;
 	
 	public Player() {
 		this.name = "TestPlayer";
@@ -16,6 +18,8 @@ public class Player {
 		this.hungerlevel = true;
 		this.warmthlevel = true;
 		this.restLevel = true;
+		this.status = RESOURCES.Status.WAKEUP;
+		
 	}
 	
 	public Player(String name) {
@@ -24,8 +28,17 @@ public class Player {
 		this.hungerlevel = true;
 		this.warmthlevel = true;
 		this.restLevel = true;
+		this.status = RESOURCES.Status.WAKEUP;
 	}
 		
+	public RESOURCES.Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(RESOURCES.Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		return "Player [hungerlevel=" + hungerlevel + ", warmthlevel=" + warmthlevel + ", restLevel=" + restLevel

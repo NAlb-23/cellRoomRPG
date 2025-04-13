@@ -1,13 +1,31 @@
 package GUI;
 
-import javax.swing.*;
-import project_software_engineering.Player;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import utils.GUIBuilder;
+import utils.RESOURCES;
 
 public class NewGameGUI extends JFrame {
 	
+	
+	private static final long serialVersionUID = 1309626696659494581L;
 	public String USERNAME = null;
 	public int BTNPRESS = -1;
     
@@ -67,7 +85,7 @@ public class NewGameGUI extends JFrame {
         panel.add(inputPanel, BorderLayout.CENTER);
         
         JPanel buttonPanel = new JPanel();
-        JButton returnButton = GUIBuilder.createDefaultEnterButtonTrigger(
+        JButton returnButton = GUIBuilder.createButton(
           		 GUIBuilder.getPaddedHTMLLabel("main menu", 50), 
            		 this::handleReturnButton);
         returnButton.setBackground(new Color(101, 67, 33));
@@ -91,9 +109,13 @@ public class NewGameGUI extends JFrame {
         JTextField textField = new JTextField(15);
         label.setForeground(Color.white);
         
-        JButton okButton = GUIBuilder.createDefaultEnterButtonTrigger(
-        		 GUIBuilder.getPaddedHTMLLabel("OK", 20), 
-        		 e -> handleUserInput(textField));
+        JButton okButton = GUIBuilder.createIconedButton(
+        		 null,
+        		 RESOURCES.OK_ICON,
+        		 RESOURCES.DARKBROWN,
+        		 e -> handleUserInput(textField),
+        		 null,
+        		 true);
        
         okButton.setBackground(new Color(101, 67, 33));
         okButton.setForeground(Color.white);
