@@ -7,16 +7,23 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import project_software_engineering.Driver;
@@ -25,175 +32,233 @@ import utils.GUIBuilder;
 import utils.RESOURCES;
 
 public class TextGameUI extends JFrame {
-	
-	
+
+
 
 	private JPanel mainPanel;
 	private JTextArea textArea;
 	private JTextArea userInfo;
+	private JTextArea roomInfo;
 	private JTextField inputField;
 	private JButton submitButton;
 	private Player user;
-	private DefaultListModel<String> inventoryModel;
-	private JList<String> inventoryList;
+	private JTextArea inventory;
 
 	public TextGameUI(Player user) {
-		super("Escape Room RPG");
-		this.user = user;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600, 400);
-		setLayout(new BorderLayout());
-		setLocationRelativeTo(null);
-		setUndecorated(true);
+	    super("Escape Room RPG");
+	    this.user = user;
+	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    setSize(600, 400);
+	    setLayout(new BorderLayout());
+	    setLocationRelativeTo(null);
+	    setUndecorated(true);
+	    ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARKBROWN, 5, true));
 
-		createHeader();
-		initializeMainPanel();
-		initializeTextArea();
-		initializeInputPanel();
-		initializePlayerInfoPanel();
+	    initializeMainPanel();  // <-- Initialize before usage
 
+	    JLayeredPane layeredPane = new JLayeredPane();
+	    layeredPane.setPreferredSize(new Dimension(500, 400));
 
-		setVisible(true);
+	    JLabel imageLabel = setupImage("Picture2.png", 500, 400);
+	    imageLabel.setBounds(0, 0, 500, 400);
 
-		displayMessage("Glad to see you’re up, " + user.getName() + ". You’ve been out for a while…"
+	    mainPanel.setOpaque(false);
+	    mainPanel.setBounds(10, 10, 310, 320);
+
+	    layeredPane.add(imageLabel, Integer.valueOf(0));
+	    layeredPane.add(mainPanel, Integer.valueOf(1));
+
+	    add(layeredPane, BorderLayout.CENTER);
+	    pack();
+
+	    createHeader();
+	    initializeTextArea();
+	    initializeInputPanel();
+	    initializeLeftPanel();
+
+	    setVisible(true);
+	    
+	    displayMessage("Glad to see you’re up, " + user.getName() + ". You’ve been out for a while…"
 				+ "\nWhy don’t you try to \"look around\"?");
 	}
+
 
 	private void initializeMainPanel() {
 		mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		mainPanel.setBackground(RESOURCES.LIGHTBROWN);
-		add(mainPanel, BorderLayout.CENTER);
 	}
 
 	private void createHeader() {
-	    JLabel title = new JLabel("Dungeon Escape");
-	    title.setForeground(Color.WHITE);
+		JLabel title = new JLabel("Dungeon Escape");
+		title.setForeground(Color.WHITE);
 
-	    JButton xButton = GUIBuilder.createIconedButton(
-	    		"",
-	    		RESOURCES.EXIT_ICON,
-	    		this.getBackground(),
-	    		e -> this.dispose(),
-	    		"Exit",
-	    		false
-	    		);  
-	    
-	    JButton QButton = GUIBuilder.createIconedButton(
-	    		"",
-	    		RESOURCES.HELP_ICON,
-	    		this.getBackground(),
-	    		e -> JOptionPane.showMessageDialog(null,"Hang in there, help is on the way"),
-	    		"Help",
-	    		false
-	    		);  
-	    
-	    JPanel header = GUIBuilder.createHeaderPanel(
-	            title, 
-	            RESOURCES.DARKBROWN,
-	            QButton,
-	            xButton
-	    );
+		JButton xButton = GUIBuilder.createIconedButton(
+				"",
+				RESOURCES.EXIT_ICON,
+				this.getBackground(),
+				e -> this.dispose(),
+				"Exit",
+				false
+				);  
 
-	    add(header, BorderLayout.NORTH);
+		JButton QButton = GUIBuilder.createIconedButton(
+				"",
+				RESOURCES.HELP_ICON,
+				this.getBackground(),
+				e -> JOptionPane.showMessageDialog(null,"Hang in there, help is on the way"),
+				"Help",
+				false
+				);  
+
+		JPanel header = GUIBuilder.createHeaderPanel(
+				title, 
+				RESOURCES.DARKBROWN,
+				QButton,
+				xButton
+				);
+
+		add(header, BorderLayout.NORTH);
 	}
-	
+
 	private void initializeTextArea() {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		textArea.setBackground(getBackground());
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(textArea);
+		scrollPane.setBackground(new Color(101, 67, 33, 128));
+		scrollPane.setBorder(null);
+		
+//		textArea.setBackground(new Color(101, 67, 33, 128));
+		textArea.setOpaque(true);
+		textArea.setBackground(new Color(101, 67, 33));  // Without the alpha value
+
+		textArea.setBorder(null);
+		textArea.setForeground(Color.WHITE);
+		
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 	}
+	
+	private JLabel setupImage(String image,int h, int w) {
+        ImageIcon imageIcon = new ImageIcon(image);
+        ImageIcon logoIcon = GUIBuilder.resizeImage(imageIcon, h, w);
+        return new JLabel(logoIcon);
+    }
 
 	private void initializeInputPanel() {
 		JPanel inputPanel = new JPanel(new BorderLayout());
 		inputField = new JTextField();
-		
+
 		submitButton = GUIBuilder.createIconedButton(
 				"",
-                RESOURCES.SUBMIT_ICON,
-	    		this.getBackground(),
-	    		e -> handleUserInput(),
-	    		"submit",
-	    		true
-	    		);  
-		
-	
+				RESOURCES.SUBMIT_ICON,
+				this.getBackground(),
+				e -> handleUserInput(),
+				"submit",
+				true
+				);  
+
+
 
 		inputPanel.add(inputField, BorderLayout.CENTER);
 		inputPanel.add(submitButton, BorderLayout.EAST);
-		
+
 		inputPanel.setBackground(RESOURCES.LIGHTBROWN);
-		
-		mainPanel.add(inputPanel, BorderLayout.SOUTH);
+
+		add(inputPanel, BorderLayout.SOUTH);
 	}
+	private void initializeLeftPanel() {
 
-	private void initializePlayerInfoPanel() {
-		JPanel playerInfoPanel = new JPanel(new BorderLayout());
-		userInfo = new JTextArea();
-		userInfo.setEditable(false);
-		userInfo.setLineWrap(true);
-		userInfo.setWrapStyleWord(true);
-		updatePlayerInfo();
-
-		TitledBorder b = BorderFactory.createTitledBorder("Player Stats:");
-		b.setTitleColor(Color.WHITE);
-		playerInfoPanel.setBorder(b);
-		
-		playerInfoPanel.add(userInfo, BorderLayout.CENTER);
-		playerInfoPanel.setPreferredSize(new Dimension(150, 150));
-		
-		playerInfoPanel.setBackground(RESOURCES.LIGHTBROWN);
-		
 		JPanel inventoryPanel = initializeInventoryPanel();
+		JPanel playerInfoPanel = initializePlayerInfoPanel();
+		JPanel roomInfoPanel = initializeQuickInfoPanel();
 
-		JPanel rightPanel = new JPanel(new BorderLayout());
-		
-		rightPanel.setBackground(RESOURCES.LIGHTBROWN);
-		
-		rightPanel.add(playerInfoPanel, BorderLayout.CENTER);
-		rightPanel.add(inventoryPanel, BorderLayout.SOUTH);
+		JPanel leftPanel = new JPanel(new BorderLayout());
 
-		mainPanel.add(rightPanel, BorderLayout.EAST);
+		leftPanel.setBackground(RESOURCES.LIGHTBROWN);
+
+		leftPanel.add(roomInfoPanel, BorderLayout.NORTH);
+		leftPanel.add(playerInfoPanel, BorderLayout.CENTER);
+		leftPanel.add(inventoryPanel, BorderLayout.SOUTH);
+		
+		leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+		add(leftPanel, BorderLayout.EAST);
+
 	}
 
-	private JPanel initializeInventoryPanel() {
-		JPanel inventoryPanel = new JPanel(new BorderLayout());
-		TitledBorder b = BorderFactory.createTitledBorder("Inventory");
-		b.setTitleColor(Color.WHITE);
-		inventoryPanel.setBorder(b);
-
-		inventoryModel = new DefaultListModel<>();
-		inventoryList = new JList<>(inventoryModel);
-		JScrollPane inventoryScrollPane = new JScrollPane(inventoryList);
-
-		inventoryPanel.add(inventoryScrollPane, BorderLayout.CENTER);
-		inventoryPanel.setPreferredSize(new Dimension(150, 100));
-		
-		inventoryPanel.setBackground(RESOURCES.LIGHTBROWN);
-		
-
-		return inventoryPanel;
+	// Helper method to initialize an invisible JTextArea
+	private JTextArea createInvisibleTextArea(String initialText, Dimension preferredSize) {
+		JTextArea textArea = new JTextArea();
+	    textArea.setEditable(false);
+	    textArea.setLineWrap(true);
+	    textArea.setWrapStyleWord(true);
+	    textArea.setText(initialText);
+	    textArea.setPreferredSize(preferredSize);
+	    textArea.setBackground(RESOURCES.LIGHTBROWN);
+	    textArea.setFocusable(false);
+	    textArea.setFocusTraversalPolicyProvider(false);
+	    textArea.setForeground(Color.white);
+	    return textArea;
 	}
 
-	private void handleUserInput() {
-		String input = inputField.getText().trim();
-		if (!input.isEmpty()) {
-			processCommand(input);
-			inputField.setText("");
-		}
+	private JPanel initializeQuickInfoPanel() {
+	    JPanel quickInfoPanel = new JPanel(new BorderLayout());
+
+	    // Use the helper method to create the JTextArea
+	    roomInfo = createInvisibleTextArea("You wake up in cell 2", new Dimension(150, 125));
+
+	    // Create and configure the JScrollPane
+	    JScrollPane scrollpane = new JScrollPane();
+	    scrollpane.setViewportView(roomInfo);
+	    scrollpane.setBorder(null);
+
+	    // Hide both horizontal and vertical scrollbars
+	    scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+	    scrollpane.setPreferredSize(new Dimension(150, 125));
+
+	    quickInfoPanel.add(scrollpane, BorderLayout.CENTER);
+	    quickInfoPanel.setBackground(RESOURCES.LIGHTBROWN);
+	    quickInfoPanel.setPreferredSize(new Dimension(150, 125));
+	    quickInfoPanel.setBorder(createTitledBorder("Your Surrounding: "));
+
+	    return quickInfoPanel;
 	}
 
-	private void displayMessage(String message) {
-		textArea.append(message + "\n");
+	private JPanel initializePlayerInfoPanel() {
+	    // Use the helper method to create the JTextArea
+	    userInfo = createInvisibleTextArea("", new Dimension(150, 150));
+
+	    // Create and configure the JScrollPane
+	    JScrollPane playerInfoPanel = new JScrollPane();
+	    playerInfoPanel.setBorder(createTitledBorder("Player Stats: "));
+	    playerInfoPanel.setViewportView(userInfo);
+	    playerInfoPanel.setPreferredSize(new Dimension(150, 150));
+	    playerInfoPanel.setBackground(RESOURCES.LIGHTBROWN);
+	    
+	    playerInfoPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    playerInfoPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+	    // Create and configure the main JPanel
+	    JPanel panel = new JPanel(new BorderLayout());
+	    panel.add(playerInfoPanel, BorderLayout.CENTER);
+	    panel.setBackground(RESOURCES.LIGHTBROWN);
+	    panel.setPreferredSize(new Dimension(150, 150));
+
+	    // Update player info content
+	    updatePlayerInfo();
+
+	    return panel;
 	}
 
-	private void processCommand(String command) {
-		displayMessage(Driver.processCommand(command));
-
+	// Helper method to create the TitledBorder
+	private TitledBorder createTitledBorder(String title) {
+	    TitledBorder border = BorderFactory.createTitledBorder(title);
+	    border.setTitleColor(Color.WHITE);
+	    return border;
 	}
 
 	private void updatePlayerInfo() {
@@ -206,12 +271,60 @@ public class TextGameUI extends JFrame {
 		userInfo.append("\nWarmth: " + warmth);
 	}
 
-	public void updateInventory(List<String> items) {
-		inventoryModel.clear();
-		for (String item : items) {
-			inventoryModel.addElement(item);
+	private JPanel initializeInventoryPanel() {
+		JPanel inventoryPanel = new JPanel(new BorderLayout());
+
+	    // Use the helper method to create the JTextArea
+	   inventory = createInvisibleTextArea("", new Dimension(150, 125));
+
+	    // Create and configure the JScrollPane
+	    JScrollPane scrollpane = new JScrollPane();
+	    scrollpane.setBorder(null);
+
+	    // Hide both horizontal and vertical scrollbars
+	    scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+	    scrollpane.setPreferredSize(new Dimension(150, 125));
+	    scrollpane.setBackground(RESOURCES.LIGHTBROWN);
+
+		scrollpane.setViewportView(inventory);
+
+		inventoryPanel.add(scrollpane, BorderLayout.CENTER);
+		inventoryPanel.setPreferredSize(new Dimension(150, 100));
+		inventoryPanel.setBorder(createTitledBorder("Invintory: "));
+
+		inventoryPanel.setBackground(RESOURCES.LIGHTBROWN);
+
+
+		return inventoryPanel;
+	}
+
+	private void handleUserInput() {
+		String input = inputField.getText().trim();
+		if (!input.isEmpty()) {
+			processCommand(input);
+			inputField.setText("");
 		}
 	}
+
+	private void processCommand(String command) {
+		displayMessage(Driver.processCommand(command));
+		if(user.getStatus().equals(RESOURCES.Status.GAMEPLAY)) {
+			displayRoomInfo();
+			updatePlayerInfo();
+		}
+	}
+
+	private void displayMessage(String message) {
+		textArea.append(message + "\n");
+	}
+
+	private void displayRoomInfo() {
+		roomInfo.setText("You are in "+user.getCurrentRoom().getName());
+		roomInfo.append(user.getCurrentRoom().getlistofPOINames());
+	}
+
+	
 
 	public String getSave() {
 
@@ -220,6 +333,7 @@ public class TextGameUI extends JFrame {
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
+
 			new TextGameUI(new Player()).setVisible(true);      
 		});
 	}

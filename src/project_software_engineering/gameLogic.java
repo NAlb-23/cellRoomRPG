@@ -1,6 +1,7 @@
 package project_software_engineering;
 
 import resources.Room;
+import utils.RESOURCES;
 
 public class gameLogic {
 
@@ -15,7 +16,8 @@ public class gameLogic {
 
 		switch (command) {
 		case "look around":
-			return player.getCurrentRoom().getDescription();
+			return player.getCurrentRoom().getDescription()
+					+"Why don’t you try to [push] the {door}?";
 
 		case "push the door":
 			return "You push against it, but it does not budge"
@@ -34,15 +36,15 @@ public class gameLogic {
 					+ "\n“examine the door’s exterior” instead.";
 			
 		case "examine the door's exterior":
+			player.setStatus(RESOURCES.Status.GAMEPLAY);
 			return "You slip your hands through the bars and run your hand across the door. "
 					+ "\nYou feel some sort of latch. You try to pull on it but to no avail. "
 					+ "\nYou run your hands across it and feel some sort of hole. "
 					+ "\nYou suspect it’s a keyhole."
-					+ "\n\nThere you go. Now, you have a goal. I’m curious to see how you get out… \nI look forward to seeing how you do. Good luck, friend.";
-
-		case "endTutorial":
-			return "\tTo review, you can quickly grasp your surroundings by “looking around”. \n\tYou can more closely examine something by “examining” the object.\n"
-					+ player.getCurrentRoom().getlistofPOINames();
+					+ "\n\nThere you go. Now, you have a goal. I’m curious to see how you get out… \nI look forward to seeing how you do. Good luck, friend."
+					+ "\nTo review, you can quickly grasp your surroundings by “looking around”. \nYou can more closely examine something by “examining” the object.\n"
+					;
+			
 		case "scream for help":
 			return "You call out, but your voice echoes back at you. No immediate response comes from the other side of the door. [try /help]";
 

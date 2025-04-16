@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -40,6 +41,7 @@ public class NewGameGUI extends JFrame {
         setLayout(new BorderLayout());
         setBackground(new Color(101, 67, 33));
         setUndecorated(true);
+        ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARKBROWN, 2, true));
         
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(500, 400));
@@ -88,7 +90,7 @@ public class NewGameGUI extends JFrame {
         JButton returnButton = GUIBuilder.createButton(
           		 GUIBuilder.getPaddedHTMLLabel("main menu", 50), 
            		 this::handleReturnButton);
-        returnButton.setBackground(new Color(101, 67, 33));
+        returnButton.setBackground(RESOURCES.DARKBROWN);
         returnButton.setForeground(Color.white);
         returnButton.setFocusPainted(false);
         returnButton.setBorderPainted(false);

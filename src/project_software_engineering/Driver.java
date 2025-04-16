@@ -12,6 +12,8 @@ import javax.swing.SwingUtilities;
 import GUI.MainMenuGUI;
 import GUI.NewGameGUI;
 import GUI.TextGameUI;
+import resources.InstantiateResources;
+import utils.RESOURCES;
 
 public class Driver {
 	// Constants for game state
@@ -90,6 +92,8 @@ public class Driver {
 					userChoice.set(gui.BTNPRESS);
 					if (gui.USERNAME != null) {
 						gameLogic.player.setName(gui.USERNAME);
+						gameLogic.player.setStatus(RESOURCES.Status.TUTORIAL);
+						gameLogic.player.setCurrentRoom(InstantiateResources.rooms.get(0));
 						System.out.println(gameLogic.player.toString());
 					}
 					latch.countDown();
@@ -111,6 +115,7 @@ public class Driver {
 			System.err.println("Latch waiting interrupted: " + e.getMessage());
 		}
 	}
+	
 	private static void startGame() {
 		CountDownLatch latch = new CountDownLatch(1);
 
@@ -160,7 +165,10 @@ public class Driver {
 
 
 	public static String processCommand(String command) {
-		return gameLogic.processCommand(command);
+		if(gameLogic.player.getStatus().equals(RESOURCES.Status.TUTORIAL)) 
+			return gameLogic.processTutorial(command);
+		else 
+			return gameLogic.processCommand(command);
 	}
 
 	public static void SaveGameState(String progress) {

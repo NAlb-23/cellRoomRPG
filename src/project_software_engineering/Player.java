@@ -1,6 +1,9 @@
 package project_software_engineering;
 
-import resources.Room;
+import java.util.ArrayList;
+import java.util.List;
+
+import resources.*;
 import utils.RESOURCES;
 
 public class Player {
@@ -12,23 +15,27 @@ public class Player {
 	private Room currentRoom;
 	private RESOURCES.Status status;
 	
+	private List<Item> inventory;
+	
 	public Player() {
 		this.name = "TestPlayer";
-		this.currentRoom = new Room("Cell 2", "NULL");
+		this.currentRoom = new Room("Cell2", null);
 		this.hungerlevel = true;
 		this.warmthlevel = true;
 		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
+		this.inventory = new ArrayList();
 		
 	}
 	
 	public Player(String name) {
 		this.name = name;
-		this.currentRoom = new Room("Cell 2", "NULL");
+		this.currentRoom = InstantiateResources.rooms.get(0);
 		this.hungerlevel = true;
 		this.warmthlevel = true;
 		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
+		this.inventory = new ArrayList();
 	}
 		
 	public RESOURCES.Status getStatus() {
@@ -85,5 +92,20 @@ public class Player {
 		this.currentRoom = currentRoom;
 	}
 
-	
+	public void addItem(Item item) {
+        inventory.add(item);
+        System.out.println(item + " added to inventory.");
+    }
+
+    public void removeItem(Item item) {
+        if (inventory.remove(item)) {
+            System.out.println(item + " removed from inventory.");
+        } else {
+            System.out.println(item + " was not found in inventory.");
+        }
+    }
+
+    public void showInventory() {
+        System.out.println(name + "'s Inventory: " + inventory);
+    }
 }

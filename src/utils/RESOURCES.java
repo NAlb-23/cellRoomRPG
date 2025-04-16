@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 public class RESOURCES {
 
 	public static final Color DARKBROWN = new Color(101, 67, 33);
-	public static final Color LIGHTBROWN = new Color(131, 97, 63);
+	public static final Color LIGHTBROWN = new Color(139, 69, 19);
 	
 	public static final ImageIcon SUBMIT_ICON = GUIBuilder.resizeImageIcon(new ImageIcon("submit_icon.png"), 20, 20);
 	public static final ImageIcon EXIT_ICON = GUIBuilder.resizeImageIcon(new ImageIcon("exit_icon_white.png"), 20, 20);
