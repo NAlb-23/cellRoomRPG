@@ -2,6 +2,7 @@ package project_software_engineering;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import resources.*;
 import utils.RESOURCES;
@@ -10,13 +11,16 @@ public class Player {
 	private boolean hungerlevel; 
 	private boolean warmthlevel;
 	private boolean restLevel;
-	
+
 	private String name;
 	private Room currentRoom;
 	private RESOURCES.Status status;
-	
+
 	private List<Item> inventory;
-	
+
+	private List<Runnable> roomListeners = new ArrayList<>();
+	private List<Runnable> inventoryListeners = new ArrayList<>();
+
 	public Player() {
 		this.name = "TestPlayer";
 		this.currentRoom = new Room("Cell2", null);
@@ -24,10 +28,10 @@ public class Player {
 		this.warmthlevel = true;
 		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
-		this.inventory = new ArrayList();
-		
+		this.inventory = new ArrayList<Item>();
+
 	}
-	
+
 	public Player(String name) {
 		this.name = name;
 		this.currentRoom = InstantiateResources.rooms.get(0);
@@ -35,9 +39,9 @@ public class Player {
 		this.warmthlevel = true;
 		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
-		this.inventory = new ArrayList();
+		this.inventory = new ArrayList<Item>();
 	}
-		
+
 	public RESOURCES.Status getStatus() {
 		return status;
 	}
@@ -89,23 +93,77 @@ public class Player {
 	}
 
 	public void setCurrentRoom(Room currentRoom) {
-		this.currentRoom = currentRoom;
+	    this.currentRoom = currentRoom;
+	    notifyRoomChange();  // Notify subscribers when the room changes.
 	}
 
 	public void addItem(Item item) {
-        inventory.add(item);
-        System.out.println(item + " added to inventory.");
-    }
+		inventory.add(item);
+		notifyInventoryChange();  // Notify GUI (or any other subscriber)
+	}
 
-    public void removeItem(Item item) {
-        if (inventory.remove(item)) {
-            System.out.println(item + " removed from inventory.");
-        } else {
-            System.out.println(item + " was not found in inventory.");
-        }
-    }
+	public void removeItem(Item item) {
+		if (inventory.remove(item)) {
+			System.out.println(item + " removed from inventory.");
+			notifyInventoryChange();  // notify here too!
+		} else {
+			System.out.println(item + " was not found in inventory.");
+		}
+	}
 
-    public void showInventory() {
-        System.out.println(name + "'s Inventory: " + inventory);
-    }
+
+	public String showInventory() {
+		StringBuilder sb = new StringBuilder();
+
+		for(Item item: inventory) {
+			sb.append(item.getName()+"\n");
+		}
+		return sb.toString();
+	}
+
+	public Item getInventoryItemByName(String itemName) {
+		for(Item item: inventory) {
+			if(item.getName().toLowerCase().equals(itemName.toLowerCase())) {
+				return item;
+			}
+		}
+		return null;
+	}
+
+
+
+	public void addInventoryListener(Runnable listener) {
+		inventoryListeners.add(listener);
+	}
+
+	private void notifyInventoryChange() {
+		for (Runnable listener : inventoryListeners) {
+			listener.run();
+		}
+	}
+
+
+
+	public void addRoomChangeListener(Runnable listener) {
+		roomListeners.add(listener);
+	}
+
+	private void notifyRoomChange() {
+		for (Runnable listener : roomListeners) {
+			listener.run();
+		}
+	}
+
+	public String getInventoryNames() {
+	    return inventory.stream()
+	                    .map(Item::getName)
+	                    .collect(Collectors.joining(","));
+	}
+
+	public void clearInventory() {
+		this.inventory.clear();
+	}
+
+
+
 }

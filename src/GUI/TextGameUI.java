@@ -3,17 +3,14 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,13 +18,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import project_software_engineering.Driver;
 import project_software_engineering.Player;
+import resources.POI;
+import resources.Room;
 import utils.GUIBuilder;
 import utils.RESOURCES;
 
@@ -44,9 +41,12 @@ public class TextGameUI extends JFrame {
 	private Player user;
 	private JTextArea inventory;
 
-	public TextGameUI(Player user) {
+	public TextGameUI(Player user, Boolean isSave) {
 	    super("Escape Room RPG");
 	    this.user = user;
+	    	
+	    user.addInventoryListener(this::updateInventory);
+	    user.addRoomChangeListener(this::displayRoomInfo);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(600, 400);
 	    setLayout(new BorderLayout());
@@ -76,6 +76,7 @@ public class TextGameUI extends JFrame {
 	    initializeInputPanel();
 	    initializeLeftPanel();
 
+	    if (isSave) loadGame();
 	    setVisible(true);
 	    
 	    displayMessage("Glad to see you’re up, " + user.getName() + ". You’ve been out for a while…"
@@ -97,7 +98,7 @@ public class TextGameUI extends JFrame {
 				"",
 				RESOURCES.EXIT_ICON,
 				this.getBackground(),
-				e -> this.dispose(),
+				e -> handleExitButton(),
 				"Exit",
 				false
 				);  
@@ -261,7 +262,7 @@ public class TextGameUI extends JFrame {
 	    return border;
 	}
 
-	private void updatePlayerInfo() {
+	public void updatePlayerInfo() {
 		String hunger = user.getHungerlevel() ? "Full" : "Hungry";
 		String rest = user.getRestLevel() ? "Well rested" : "Tired";
 		String warmth = user.getWarmthlevel() ? "Warm" : "Cold";
@@ -308,23 +309,44 @@ public class TextGameUI extends JFrame {
 	}
 
 	private void processCommand(String command) {
-		displayMessage(Driver.processCommand(command));
-		if(user.getStatus().equals(RESOURCES.Status.GAMEPLAY)) {
-			displayRoomInfo();
-			updatePlayerInfo();
-		}
+	    displayMessage(Driver.processCommand(command));
+	    if(user.getStatus().equals(RESOURCES.Status.GAMEPLAY)) {
+	        registerPOIListeners(); // always hook into the latest room's POIs
+	        displayRoomInfo();
+	        updatePlayerInfo();
+	    }
 	}
+	
+	public void setTextArea(String progress) {
+		textArea.setText(progress);
+	}
+
 
 	private void displayMessage(String message) {
 		textArea.append(message + "\n");
 	}
 
-	private void displayRoomInfo() {
-		roomInfo.setText("You are in "+user.getCurrentRoom().getName());
-		roomInfo.append(user.getCurrentRoom().getlistofPOINames());
+	public void displayRoomInfo() {
+	    Room currentRoom = user.getCurrentRoom();
+
+	    if (currentRoom != null) {
+	        roomInfo.setText("You are in " + currentRoom.getName() + "\n");
+	        roomInfo.append(currentRoom.getlistofPOINames());
+	    } else {
+	        roomInfo.setText("You are not in a valid room.\n");
+	    }
 	}
 
 	
+	public void updateInventory() {
+		inventory.setText(user.showInventory());
+	}
+
+	private void registerPOIListeners() {
+	    for (POI poi : user.getCurrentRoom().getPois()) {
+	        poi.addVisibilityListener(() -> displayRoomInfo());
+	    }
+	}
 
 	public String getSave() {
 
@@ -334,8 +356,42 @@ public class TextGameUI extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 
-			new TextGameUI(new Player()).setVisible(true);      
+			new TextGameUI(new Player(), false).setVisible(true);      
 		});
 	}
+	
+	private void handleExitButton() {
+	    int choice = JOptionPane.showConfirmDialog(
+	        null, 
+	        "Would you like to save the game before exiting?", 
+	        "Exit Game", 
+	        JOptionPane.YES_NO_CANCEL_OPTION
+	    );
+
+	    // Handle the user's choice
+	    switch (choice) {
+	        case JOptionPane.YES_OPTION:
+	            // Call the save game method from Driver
+	            Driver.SaveGameState(textArea.getText()); // Save the game state
+	            System.exit(0); // Exit the game after saving
+	            break;
+
+	        case JOptionPane.NO_OPTION:
+	            System.exit(0); // Exit without saving
+	            break;
+
+	        case JOptionPane.CANCEL_OPTION:
+	        case JOptionPane.CLOSED_OPTION:
+	            // Don't exit, just return
+	            break;
+	    }
+	}
+	
+	public void loadGame() {
+	    Driver.LoadGameState(this);  // Pass `this` (the `TextGameUI` instance) to update the UI after loading
+	}
+
+
+
 
 }

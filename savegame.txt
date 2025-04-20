@@ -1,0 +1,36 @@
+PlayerName:nick
+CurrentRoom:Cell 2
+Status:GAMEPLAY
+Hunger:true
+Warmth:true
+Rest:true
+Inventory:Rag
+Progress:Glad to see you’re up, nick. You’ve been out for a while…
+Why don’t you try to "look around"?
+A faint torch flickers outside, barely illuminating your stone-walled, windowless cell. The heavy door and rusted bars stand between you and the hallway.Why don’t you try to [push] the {door}?
+You push against it, but it does not budge
+
+Quite the optimist, aren’t you? 
+Did you honestly expect it to be that simple? 
+You have to try harder than that. Why don’t you more closely 
+“examine the door”?
+Due to your only light source being outside of your cell, 
+you cannot visually make out any details on the cell-side of the door. 
+You reach out to touch it and find it to be cold, hard, and solid. 
+You find no cracks, gaps, or holes.
+
+What moronic builder would design a cell door that can be opened from the inside? 
+Come on… You’re better than this. I thought you would immediately 
+“examine the door’s exterior” instead.
+You slip your hands through the bars and run your hand across the door. 
+You feel some sort of latch. You try to pull on it but to no avail. 
+You run your hands across it and feel some sort of hole. 
+You suspect it’s a keyhole.
+
+There you go. Now, you have a goal. I’m curious to see how you get out… 
+I look forward to seeing how you do. Good luck, friend.
+To review, you can quickly grasp your surroundings by “looking around”. 
+You can more closely examine something by “examining” the object.
+
+Rag added to inventory.
+

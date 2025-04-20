@@ -2,6 +2,10 @@ package project_software_engineering;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,6 +17,7 @@ import GUI.MainMenuGUI;
 import GUI.NewGameGUI;
 import GUI.TextGameUI;
 import resources.InstantiateResources;
+import resources.Item;
 import utils.RESOURCES;
 
 public class Driver {
@@ -40,14 +45,15 @@ public class Driver {
 			} else {
 				// TODO: launch main game
 				System.out.println("Launching main game...");
-				startGame();
+				startGame(false);
 			}
 			break;
 
 		case LOADSAVE:
-			System.out.println("Load Save");
-			// TODO: load and launch saved game
-			break;
+		    System.out.println("Load Save");
+		    startGame(true);  
+		    
+		    break;
 
 		default:
 			System.err.println("Unexpected input from main menu.");
@@ -116,11 +122,11 @@ public class Driver {
 		}
 	}
 	
-	private static void startGame() {
+	private static void startGame(boolean isSave) {
 		CountDownLatch latch = new CountDownLatch(1);
 
 		SwingUtilities.invokeLater(() -> {
-			TextGameUI gui = new TextGameUI(gameLogic.player);
+			TextGameUI gui = new TextGameUI(gameLogic.player, isSave);
 
 			gui.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			gui.addWindowListener(new WindowAdapter() {
@@ -162,6 +168,25 @@ public class Driver {
 			gui.setVisible(true);
 		});
 	}
+	
+	public static void SaveGameState(String progress) {
+	    try {
+	        FileWriter writer = new FileWriter("savegame.txt");
+	        writer.write("PlayerName:" + gameLogic.player.getName() + "\n");
+	        writer.write("CurrentRoom:" + gameLogic.player.getCurrentRoom().getName() + "\n");
+	        writer.write("Status:" + gameLogic.player.getStatus().name() + "\n");
+	        writer.write("Hunger:" + gameLogic.player.getHungerlevel() + "\n");
+	        writer.write("Warmth:" + gameLogic.player.getWarmthlevel() + "\n");
+	        writer.write("Rest:" + gameLogic.player.getRestLevel() + "\n");
+	        writer.write("Inventory:" + gameLogic.player.getInventoryNames() + "\n");
+	        writer.write("Progress:" + progress + "\n");
+	        writer.close();
+	        System.out.println("Game saved successfully.");
+	    } catch (IOException e) {
+	        System.err.println("Error saving game: " + e.getMessage());
+	    }
+	}
+
 
 
 	public static String processCommand(String command) {
@@ -170,9 +195,80 @@ public class Driver {
 		else 
 			return gameLogic.processCommand(command);
 	}
+	
 
-	public static void SaveGameState(String progress) {
-		System.out.println("PLayer: "+gameLogic.player);
-		System.out.println(progress);
+	public static void LoadGameState(TextGameUI ui) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader("savegame.txt"))) {
+	        String line;
+	        StringBuilder progressBuilder = new StringBuilder();
+	        boolean isProgressSection = false;
+
+	        while ((line = reader.readLine()) != null) {
+
+	            // If we're in Progress section, append everything till EOF
+	            if (isProgressSection) {
+	                progressBuilder.append(line).append("\n");
+	                continue;
+	            }
+
+	            String[] parts = line.split(":", 2);
+	            if (parts.length < 2) continue;
+
+	            String key = parts[0];
+	            String value = parts[1];
+
+	            switch (key) {
+	                case "PlayerName":
+	                    gameLogic.player.setName(value);
+	                    break;
+	                case "CurrentRoom":
+	                    gameLogic.player.setCurrentRoom(InstantiateResources.findRoomByName(value));
+	                    break;
+	                case "Status":
+	                    gameLogic.player.setStatus(RESOURCES.Status.valueOf(value));
+	                    break;
+	                case "Hunger":
+	                    gameLogic.player.setHungerlevel(Boolean.parseBoolean(value));
+	                    break;
+	                case "Warmth":
+	                    gameLogic.player.setWarmthlevel(Boolean.parseBoolean(value));
+	                    break;
+	                case "Rest":
+	                    gameLogic.player.setRestLevel(Boolean.parseBoolean(value));
+	                    break;
+	                case "Inventory":
+	                    gameLogic.player.clearInventory();
+	                    for (String itemName : value.split(",")) {
+	                        Item item = InstantiateResources.findItemByName(itemName);
+	                        if (item != null) gameLogic.player.addItem(item);
+	                    }
+	                    break;
+	                case "Progress":
+	                    isProgressSection = true;
+	                    progressBuilder.append(value).append("\n");
+	                    break;
+	            }
+	        }
+
+	        // If progress was collected, print or assign it somewhere
+	        String fullProgress = progressBuilder.toString().trim();
+	        if (!fullProgress.isEmpty()) {
+	            System.out.println("Loaded progress:\n" + fullProgress);
+	            // You could also: ui.setProgressText(fullProgress);
+	        }
+
+	        ui.updateInventory();
+	        ui.displayRoomInfo();
+	        ui.updatePlayerInfo();
+	        ui.setTextArea(fullProgress);
+
+	        System.out.println("Game loaded successfully.");
+
+	    } catch (IOException e) {
+	        System.err.println("Error loading game: " + e.getMessage());
+	    }
 	}
+
+
+
 }
