@@ -1,36 +1,79 @@
 PlayerName:nick
-CurrentRoom:Cell 2
+CurrentRoom:Hallway
 Status:GAMEPLAY
 Hunger:true
 Warmth:true
 Rest:true
-Inventory:Rag
-Progress:Glad to see you’re up, nick. You’ve been out for a while…
+Inventory:Tool,Thin Metal Pick,Key
+Progress:====================
+Glad to see you’re up, nick. You’ve been out for a while…
 Why don’t you try to "look around"?
-A faint torch flickers outside, barely illuminating your stone-walled, windowless cell. The heavy door and rusted bars stand between you and the hallway.Why don’t you try to [push] the {door}?
-You push against it, but it does not budge
+====================
+> look around
+====================
+A faint torch flickers outside, barely illuminating your stone-walled, windowless cell. The heavy door and rusted bars stand between you and the hallway.
 
-Quite the optimist, aren’t you? 
-Did you honestly expect it to be that simple? 
-You have to try harder than that. Why don’t you more closely 
-“examine the door”?
-Due to your only light source being outside of your cell, 
-you cannot visually make out any details on the cell-side of the door. 
-You reach out to touch it and find it to be cold, hard, and solid. 
+Why don’t you try to [push] {door}?
+====================
+> push door
+====================
+You push against it, but it does not budge.
+
+Quite the optimist, aren’t you?
+Did you honestly expect it to be that simple?
+You’ll have to try harder than that.
+Why don’t you more closely “examine door”?
+====================
+> examine door
+====================
+Due to your only light source being outside of your cell, you cannot visually make out any details on the cell-side of the door.
+
+You reach out to touch it. It feels cold, hard, and solid. 
 You find no cracks, gaps, or holes.
 
-What moronic builder would design a cell door that can be opened from the inside? 
-Come on… You’re better than this. I thought you would immediately 
-“examine the door’s exterior” instead.
-You slip your hands through the bars and run your hand across the door. 
-You feel some sort of latch. You try to pull on it but to no avail. 
-You run your hands across it and feel some sort of hole. 
-You suspect it’s a keyhole.
+What moronic builder would design a cell door that can be opened from the inside?
+Come on… you’re better than this. I thought you would immediately “examine door’s exterior” instead.
+====================
+> examine door's exterior
+====================
+You slip your hands through the bars and run your fingers across the door.
+You feel some sort of latch. You try to pull on it, but to no avail.
 
-There you go. Now, you have a goal. I’m curious to see how you get out… 
-I look forward to seeing how you do. Good luck, friend.
-To review, you can quickly grasp your surroundings by “looking around”. 
-You can more closely examine something by “examining” the object.
+Continuing your search, your fingers find a small opening — it feels like a keyhole.
 
+There you go. Now you have a goal.
+I’m curious to see how you’ll get out… I look forward to seeing how you do.
+
+Good luck, friend.
+
+[Tip] You can quickly grasp your surroundings by typing: “look around”.
+You can inspect something more closely by typing: “examine [object]”.
+====================
+> take rag
+====================
 Rag added to inventory.
+====================
+> use rag on rusted plate
+====================
+You carefully wrap the sharp plate with the rag, creating a new tool. The 'Tool' has been added to your inventory.
+====================
+> use tool on stone
+====================
+You pry the stone loose, revealing a [Thin Metal Pick] and [Heavy Stone].
+====================
+> use stone on drawer
+====================
+the Drawer is starting to crack open, try stricking again.
+====================
+> use stone on drawer
+====================
+After two solid strikes, the drawer gives way, revealing a [Locked Box]. However, the stone crumbles apart as well.
+====================
+> use thin metal pick on locked box
+====================
+You pick the lock and retrieve a [Key].
+====================
+> use key on door
+====================
+You unlock the door. Freedom is one step closer.
 

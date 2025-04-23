@@ -41,12 +41,12 @@ public class NewGameGUI extends JFrame {
         setLayout(new BorderLayout());
         setBackground(new Color(101, 67, 33));
         setUndecorated(true);
-        ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARKBROWN, 2, true));
+        ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARK_BROWN, 2, true));
         
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(500, 400));
         
-        JLabel imageLabel = setupImage("Picture2.png", 500, 400);
+        JLabel imageLabel = GUIBuilder.setupImage(RESOURCES.RESLOC+"Picture2.png", 500, 400);
         imageLabel.setBounds(0, 0, 500, 400);
         
         JPanel contentPanel = createContentPanel();
@@ -90,7 +90,7 @@ public class NewGameGUI extends JFrame {
         JButton returnButton = GUIBuilder.createButton(
           		 GUIBuilder.getPaddedHTMLLabel("main menu", 50), 
            		 this::handleReturnButton);
-        returnButton.setBackground(RESOURCES.DARKBROWN);
+        returnButton.setBackground(RESOURCES.DARK_BROWN);
         returnButton.setForeground(Color.white);
         returnButton.setFocusPainted(false);
         returnButton.setBorderPainted(false);
@@ -114,7 +114,7 @@ public class NewGameGUI extends JFrame {
         JButton okButton = GUIBuilder.createIconedButton(
         		 null,
         		 RESOURCES.OK_ICON,
-        		 RESOURCES.DARKBROWN,
+        		 RESOURCES.DARK_BROWN,
         		 e -> handleUserInput(textField),
         		 null,
         		 true);
@@ -141,13 +141,7 @@ public class NewGameGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a name.");
         }
     }
-    
-    private JLabel setupImage(String image, int h, int w) {
-        ImageIcon imageIcon = new ImageIcon(image);
-        ImageIcon logoIcon = GUIBuilder.resizeImage(imageIcon, h, w);
-        return new JLabel(logoIcon);
-    }
-    
+
     private void handleReturnButton (ActionEvent e) {
     	BTNPRESS = 1;
     	this.dispose();

@@ -20,37 +20,42 @@ public class gameLogic {
 
 		switch (command) {
 		case "look around":
-			return player.getCurrentRoom().getDescription()
-					+"Why don’t you try to [push] the {door}?";
+			return player.getCurrentRoom().getDescription() +
+					"\n\nWhy don’t you try to [push] {door}?";
 
-		case "push the door":
-			return "You push against it, but it does not budge"
-			+"\n\nQuite the optimist, aren’t you? "
-			+ "\nDid you honestly expect it to be that simple? "
-			+ "\nYou have to try harder than that. Why don’t you more closely "
-			+ "\n“examine the door”?";
+		case "push door":
+			return "You push against it, but it does not budge."
+			+ "\n\nQuite the optimist, aren’t you?"
+			+ "\nDid you honestly expect it to be that simple?"
+			+ "\nYou’ll have to try harder than that."
+			+ "\nWhy don’t you more closely “examine door”?";
 
-		case "examine the door":
+		case "examine door":
 			return "Due to your only light source being outside of your cell, "
-			+ "\nyou cannot visually make out any details on the cell-side of the door"
-			+ ". \nYou reach out to touch it and find it to be cold, hard, and solid. "
+			+ "you cannot visually make out any details on the cell-side of the door."
+			+ "\n\nYou reach out to touch it. It feels cold, hard, and solid. "
 			+ "\nYou find no cracks, gaps, or holes."
-			+ "\n\nWhat moronic builder would design a cell door that can be opened from the inside? "
-			+ "\nCome on… You’re better than this. I thought you would immediately "
-			+ "\n“examine the door’s exterior” instead.";
+			+ "\n\nWhat moronic builder would design a cell door "
+			+ "that can be opened from the inside?"
+			+ "\nCome on… you’re better than this. I thought you would immediately "
+			+ "“examine door’s exterior” instead.";
 
-		case "examine the door's exterior":
+		case "examine door's exterior":
 			player.setStatus(RESOURCES.Status.GAMEPLAY);
-			return "You slip your hands through the bars and run your hand across the door. "
-			+ "\nYou feel some sort of latch. You try to pull on it but to no avail. "
-			+ "\nYou run your hands across it and feel some sort of hole. "
-			+ "\nYou suspect it’s a keyhole."
-			+ "\n\nThere you go. Now, you have a goal. I’m curious to see how you get out… \nI look forward to seeing how you do. Good luck, friend."
-			+ "\nTo review, you can quickly grasp your surroundings by “looking around”. \nYou can more closely examine something by “examining” the object.\n"
-			;
+			return "You slip your hands through the bars and run your fingers across the door."
+			+ "\nYou feel some sort of latch. You try to pull on it, but to no avail."
+			+ "\n\nContinuing your search, your fingers find a small opening — "
+			+ "it feels like a keyhole."
+			+ "\n\nThere you go. Now you have a goal."
+			+ "\nI’m curious to see how you’ll get out… I look forward to seeing how you do."
+			+ "\n\nGood luck, friend."
+			+ "\n\n[Tip] You can quickly grasp your surroundings by typing: “look around”."
+			+ "\nYou can inspect something more closely by typing: “examine [object]”.";
 
 		case "scream for help":
-			return "You call out, but your voice echoes back at you. No immediate response comes from the other side of the door. [try /help]";
+			return "You call out, but your voice only echoes back at you."
+			+ "\nNo immediate response comes from the other side of the door."
+			+ "\n\nMaybe try [ /help ].";
 
 		case "/help":
 			return callHelp();
@@ -59,6 +64,7 @@ public class gameLogic {
 			return "You try to '" + msg + "', but nothing happens.";
 		}
 	}
+
 
 	public static String processCommand(String msg) {
 		if (msg == null || msg.trim().isEmpty()) {
@@ -83,6 +89,14 @@ public class gameLogic {
 		// Detect "use X on Y" style commands
 		if (command.equals("use")) {
 			return handleUseCommand(msg, target);
+		}
+		
+		if(command.equalsIgnoreCase("Enter")) {
+			Room targetRoom = InstantiateResources.findRoomByName(target.trim().toLowerCase());
+			if (targetRoom != null)
+				return (handleEnterRoomCommand(targetRoom));
+			else
+				return target + " room not found";
 		}
 
 		return handleSimpleCommand(command, target);
@@ -134,15 +148,31 @@ public class gameLogic {
 		}
 		else if(poi.getName().equals("Locked Box") && item.getName().equals("Thin Metal Pick")) {
 			player.addItem(player.getCurrentRoom().getItemByName("Key"));
-			
+
 			return poi.interAct("use thin metal pick");
 		}
 		else if(poi.getName().equals("Door") && item.getName().equals("Key")) {
 			poi.setLocked(false);
-			
-			player.setCurrentRoom(poi.getLeadsTo());
-			
+			InstantiateResources.findRoomByName("Hallway").setLocked(false);
+			InstantiateResources.findRoomByName("Cell 2").setLocked(false);
+
 			return poi.interAct("use key");
+		}
+		else if(poi.getName().equals("Cell 1 Door") && item.getName().equals("Key")) {
+			poi.setLocked(false);
+			player.removeItem(item);
+			player.addItem(InstantiateResources.findItemByName("Metal key loop"));
+			InstantiateResources.findRoomByName("Cell 1").setLocked(false);
+			
+			return poi.interAct("use key1");
+		}
+		else if(poi.getName().equals("Cell 2 Door") && item.getName().equals("Key")) {
+			
+			return "The door is already unlocked.";
+		}
+		else if(poi.getName().equals("Cell 3 Door") && item.getName().equals("Key")) {
+
+			return poi.interAct("use key1");
 		}
 
 		// Default handling for other cases
@@ -175,32 +205,55 @@ public class gameLogic {
 
 
 	private static String handleSimpleCommand(String command, String target) {
-		// Check POIs
-		POI thisPOI = player.getCurrentRoom().getPOIbyName(target);
-		if (thisPOI != null) {
-			return handlePOICommand(command, thisPOI);
-		}
+	    // Check POIs
+	    POI thisPOI = player.getCurrentRoom().getPOIbyName(target);
+	    if (thisPOI != null) {
+	        return handlePOICommand(command, thisPOI);
+	    }
 
-		// Check Items in the room
-		Item thisItem = player.getCurrentRoom().getItemByName(target);
-		if (thisItem != null) {
-			return handleItemCommand(command, thisItem);
-		}
+	    // Check Items in the room
+	    Item thisItem = player.getCurrentRoom().getItemByName(target);
+	    if (thisItem != null) {
+	        return handleItemCommand(command, thisItem);
+	    }
 
-		return "You don't see any '" + target + "' here.";
+	    // Check Items in inventory
+	    Item inventoryItem = player.getInventoryItemByName(target);
+	    if (inventoryItem != null) {
+	        return handleItemCommand(command, inventoryItem);
+	    }
+
+	    return "You don't see any '" + target + "' here.";
 	}
 
+
 	private static String handlePOICommand(String command, POI thisPOI) {
-		String result = thisPOI.interAct(command);
+		String result = "";
 
 		if (thisPOI.getLeadsTo() != null && (command.equals("use") || command.equals("open"))) {
-			Room nextRoom = InstantiateResources.findRoomByName(thisPOI.getLeadsTo().getName());
-			if (nextRoom != null) {
-				player.setCurrentRoom(nextRoom);
-				result += "\nYou step into " + nextRoom.getName() + ".";
-			} else {
-				result += "\nBut the destination seems inaccessible.";
+			if(thisPOI.isLocked()) {
+				return "the "+ thisPOI.getName() + " is locked";
 			}
+			else {
+				Room nextRoom = thisPOI.getLeadsTo();
+				if (nextRoom != null) {
+					player.setCurrentRoom(nextRoom);
+					result += "\nYou step into " + nextRoom.getName() + ".";
+				} else {
+					result += "\nBut the destination seems inaccessible.";
+				}
+			}
+		}
+		else {
+			if(thisPOI.getName().equalsIgnoreCase("Bucket")) {
+				if(command.equalsIgnoreCase("take"))
+					return (handleTakeItemCommand(thisPOI.getItems().getFirst()));
+				else if (command.equalsIgnoreCase("dump")) {
+					thisPOI.setLocked(false);
+					player.getCurrentRoom().getPOIbyName("Mess").setIsHidden(false);
+				}
+			}
+			result = thisPOI.interAct(command);
 		}
 
 		return result;
@@ -224,9 +277,63 @@ public class gameLogic {
 			return "The plate is too sharp to handle barehanded. You should wrap it with something first.";
 		}
 
+		if(thisItem.getName().equalsIgnoreCase("Bucket") && player.getCurrentRoom().getPOIbyName("Bucket").isLocked()) {
+			return "Bucket is full of contents, try dumping first";
+		}
+
 		player.addItem(thisItem);
 		return thisItem.getName() + " added to inventory.";
 	}
+	
+	private static String handleEnterRoomCommand(Room room) {
+	    switch (room.getId()) {
+	        case 0: // cell2
+	            if (!room.isLocked()) {
+	                player.setCurrentRoom(room); 
+	                return "You enter cell 2";
+	            } else {
+	                return "Cell 2 is locked.";
+	            }
+
+	        case 1: // cell1
+	            if (!room.isLocked() && !InstantiateResources.findRoomByName("Cell 2").isLocked()) {
+	                player.setCurrentRoom(room);
+	                return "You enter cell 1";
+	            } else {
+	                return "Cell 1 is locked.";
+	            }
+
+	        case 2: // cell3
+	            if (!room.isLocked() && (player.getInventoryItemByName("Bar Pole") != null)) {
+	                player.setCurrentRoom(room);
+	                return "after prying off the bar pole, you squeeze into the gap into cell 3";
+	            } else {
+	                return "Cell 3 Door is locked. But the bars have a section loose enough to snap, try taking [Bar Pole]";
+	            }
+
+	        case 3: // guardRoom
+	            if (!room.isLocked()) {
+	                player.setCurrentRoom(room);
+	                return "You enter the guard room.";
+	            } else {
+	                return "The guard room is locked.";
+	            }
+
+	        case 4: // hallway
+	            if (!room.isLocked()  && !InstantiateResources.findRoomByName("Cell 2").isLocked()) {
+	                player.setCurrentRoom(room);
+	                return "You enter the Hallway.";
+	            } else {
+	                return "The Hallway is locked.";
+	            }
+
+	        default:
+	            return "Room not found!";
+	    }
+	}
+
+
+
 
 	private static String callHelp() {
 		StringBuilder sb = new StringBuilder();

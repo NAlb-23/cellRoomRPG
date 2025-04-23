@@ -682,4 +682,9 @@ public class GUIBuilder {
 		return panel;
 	}
 
+	public static JLabel setupImage(String image,int h, int w) {
+        ImageIcon imageIcon = new ImageIcon(image);
+        ImageIcon logoIcon = GUIBuilder.resizeImage(imageIcon, h, w);
+        return new JLabel(logoIcon);
+    }
 }

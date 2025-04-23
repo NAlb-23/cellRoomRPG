@@ -42,12 +42,12 @@ public class MainMenuGUI extends JFrame {
 	    setBackground(new Color(101, 67, 33));
 	    setUndecorated(true);
 
-	    ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARKBROWN, 2, true));
+	    ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARK_BROWN, 2, true));
 	    
 	    JLayeredPane layeredPane = new JLayeredPane();
 	    layeredPane.setPreferredSize(new Dimension(500, 400));
 
-	    JLabel imageLabel = setupImage("Picture2.png", 500, 400);
+	    JLabel imageLabel = GUIBuilder.setupImage(RESOURCES.RESLOC+"Picture2.png", 500, 400);
 	    imageLabel.setBounds(0, 0, 500, 400);
 
 	    JPanel buttonPanel = createButtonPanel();
@@ -100,14 +100,6 @@ public class MainMenuGUI extends JFrame {
 	    
 	    return ButtonPanel;
 	}
-
-
-	
-	private JLabel setupImage(String image,int h, int w) {
-        ImageIcon imageIcon = new ImageIcon(image);
-        ImageIcon logoIcon = GUIBuilder.resizeImage(imageIcon, h, w);
-        return new JLabel(logoIcon);
-    }
 	
 	private void handleStartButton(ActionEvent e) {
 		userChoice = NEWSAVE;

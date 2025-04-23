@@ -8,6 +8,26 @@ public class Room {
 	private String name;
 	private String description;
 	private List<POI> pois = new ArrayList<>();
+	private int id;
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	private boolean isLocked = true;
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
 
 	public Room(String name, String description) {
 		this.name = name;
