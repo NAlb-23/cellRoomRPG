@@ -45,6 +45,7 @@ public class MainMenuGUI extends JFrame {
 	    ((JComponent) getRootPane().getContentPane()).setBorder(BorderFactory.createLineBorder(RESOURCES.DARK_BROWN, 2, true));
 	    
 	    JLayeredPane layeredPane = new JLayeredPane();
+	   
 	    layeredPane.setPreferredSize(new Dimension(500, 400));
 
 	    JLabel imageLabel = GUIBuilder.setupImage(RESOURCES.RESLOC+"Picture2.png", 500, 400);

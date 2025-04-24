@@ -43,17 +43,16 @@ public class InstantiateResources {
 		bars.addItem(plate);
 
 		POI drawer = new POI("Drawer", "A broken wooden drawer, stuck tight.");
-		Item lockedBox = new Item("Locked Box", "A small locked container.");
 		drawer.addInteraction("examine", "The drawer seems stuck, but something's inside.");
 		drawer.addInteraction("use stone", "After two solid strikes, the drawer gives way, revealing a [Locked Box]. However, the stone crumbles apart as well.");
-		drawer.addItem(lockedBox);
-
+	
 		POI box = new POI("Locked Box", "A simple locked box.");
 		Item key = new Item("Key", "A small iron key, likely for a door.");
 		box.addInteraction("examine", "The lock seems simple, a thin pick could open it.");
-		box.addInteraction("use thin metal pick", "You pick the lock and retrieve a [Key].");
+		box.addInteraction("use thin metal pick", "You pick the lock and retrieve a [Key]. The metal pick got wedged in the box, you can't seem to take it out anymore.");
 		box.addItem(key);
 		box.setIsHidden(true);
+		box.setLocked(true);
 
 		cell2.addPOI(door);
 		cell2.addPOI(floor);
@@ -104,9 +103,10 @@ public class InstantiateResources {
 
 		POI window = new POI("Window", "You approach and examine the window. It’s located on the upper part of the wall, just past your reach. The window is sloped upwards, and you can see the night sky beyond it. A crescent moon and stars light up the sky. Besides crickets and the occasional breeze, you hear nothing from the outside. The window has vertical, metal bars preventing escape. You notice that the stone on the lower part of the window where the bars meet the wall show signs of damage and erosion.\n");
 		window.addInteraction("examine", window.getDescription());
-		window.addInteraction("use bar pole x4", "After repeated strikes, the bars snap away, leaving space to escape.");
+		window.addInteraction("use bar pole x4", "Using the long metal bar, you begin to work away the stone. It’s difficult and slow with dust and chips flying everywhere. You keep working away on it, eventually becoming drenched in sweat and exhausted. You don’t know how long it takes, but enough stone has been removed to expose the {window}’s metal bars. You believe you may be able to [pull] {bars}.\n");
 		window.addInteraction("bring chair", "With the chair in place, you can reach the opening.");
-
+		window.addInteraction("use stone", "Smart thinking - you throw the stone aiming at the loose lower part of the window, you miss and the stone gets tossed outside.");
+		
 		POI carvings = new POI("Wall", "Faded and unintelligible symbols cover the wall.");
 		carvings.addInteraction("examine", "You approach the walls to better see the carvings. The carvings seem to be in a language you do not understand. They are scattered all across the walls.\n");
 
@@ -115,9 +115,12 @@ public class InstantiateResources {
 		
 		POI bed = new POI("Bed", "An old bed with a worn-out mattress.");
 		bed.addInteraction("examine", "You approach the old and dirty bed. A torn and hole-filled [blanket] sits on top of a dirty mattress. The mattress looks lumpy, as though hiding something.");
-
-		POI mattress = new POI("Mattress", "The mattress fabric is patched and rough. you notice that you could rip the stiches if you have the right tool.");
-		Item rope = new Item("Rope", "A knotted rope made from strips of fabric.");
+		bed.addInteraction("take blanket", "blanket added to inventory");
+		Item blanket = new Item("Blanket", "Torn and filled with holes.");
+		bed.addItem(blanket);
+		
+		POI mattress = new POI("Mattress", "The mattress fabric is patched and rough.");
+		Item rope = new Item("Rope", "A knotted rope made from strips of fabric. you notice that you could rip the stiches if you have the right tool.");
 		mattress.addInteraction("examine", "One patch looks freshly sewn.");
 		mattress.addInteraction("use tool", "You cut open the patch and pull out a [Rope].");
 		mattress.addItem(rope);
@@ -133,7 +136,7 @@ public class InstantiateResources {
 
 
 		// === GUARD ROOM ===
-		Room guardRoom = new Room("Guard Room", "A dimly lit guard room with scattered objects and heavy furniture.");
+		Room guardRoom = new Room("Guard Room", " At the end is a large, metal {door}. One side of the room has a simple {table} and a chair. The other side has some {shelves} and a {barrel}.\n");
 
 		guardRoom.setLocked(false);
 		
@@ -146,23 +149,27 @@ public class InstantiateResources {
 		POI table = new POI("Table", "A sturdy wooden table with some items on it.");
 		Item matchbox = new Item("Matchbox", "A small box containing matches.");
 		table.addItem(matchbox);
-		table.addInteraction("examine", "There's a [Matchbox] resting on the table.");
+		table.addInteraction("examine", "The table has a small candle holder with some melted wax on the bottom. A [matchbox] lay near the spent candle. There is nothing else.\n");
 
 		POI chair = new POI("Chair", "A heavy wooden chair.");
 		chair.addInteraction("examine", "Sturdy enough to stand on or move.");
 
 		POI shelves = new POI("Shelves", "Dusty wooden shelves lined with old supplies.");
 		Item hardtack = new Item("Hardtack", "A rock-hard survival biscuit.");
+
 		Item jerky = new Item("Dried Jerky", "Dry, tough strips of preserved meat.");
+
 		shelves.addItem(hardtack);
 		shelves.addItem(jerky);
-		shelves.addInteraction("examine", "You find [Hardtack] and [Dried Jerky] on the shelves.");
+		shelves.addInteraction("examine", "You find various parchments, papers, and writing tools. However, you cannot make out what is written on them. At the bottom shelves, hidden behind a book are some [hardtack] and [Dried Jerky].\n");
 
 		POI barrel = new POI("Barrel", "A large wooden barrel filled with water.");
-		barrel.addInteraction("open with tool", "You pry open the barrel lid.");
+		barrel.addInteraction("open with tool", "Using your tool on the barrel, you manage to pry open the lid. You find it full of a clear, odorless liquid. Floating on top is a wooden cup. You think it likely contains water and should be able to [drink] from the {barrel}. \n");
 		barrel.addInteraction("drink", "You quench your thirst.");
-		barrel.addInteraction("soak food", "You soften the [Hardtack] and [Dried Jerky] to make them edible.");
-
+		barrel.addInteraction("soak food", "You soften the food to make them edible.");
+		barrel.addInteraction("examine", "The [barrel] has a lid securing its contents, you need something to pry it open. You try to move it, but it does not move. You hear a swishing sound, indicating that it is full of some liquid. \n");
+		barrel.setLocked(true);
+		
 		guardRoom.addPOI(heavyDoor);
 		guardRoom.addPOI(entrenceDoor);
 		guardRoom.addPOI(table);

@@ -74,7 +74,7 @@ public class POI {
 				return i[1];
 			}
 		}
-		return null;
+		return "you try "+command+" nothing happens";
 	}
 
 	public String help() {

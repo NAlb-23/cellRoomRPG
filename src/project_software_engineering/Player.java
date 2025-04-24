@@ -8,9 +8,6 @@ import resources.*;
 import utils.RESOURCES;
 
 public class Player {
-	private boolean hungerlevel; 
-	private boolean warmthlevel;
-	private boolean restLevel;
 
 	private String name;
 	private Room currentRoom;
@@ -21,12 +18,11 @@ public class Player {
 	private List<Runnable> roomListeners = new ArrayList<>();
 	private List<Runnable> inventoryListeners = new ArrayList<>();
 
+	private PlayerNeeds needs = new PlayerNeeds();
+
 	public Player() {
 		this.name = "TestPlayer";
 		this.currentRoom = new Room("Cell2", null);
-		this.hungerlevel = true;
-		this.warmthlevel = true;
-		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
 		this.inventory = new ArrayList<Item>();
 
@@ -35,9 +31,6 @@ public class Player {
 	public Player(String name) {
 		this.name = name;
 		this.currentRoom = InstantiateResources.rooms.get(0);
-		this.hungerlevel = true;
-		this.warmthlevel = true;
-		this.restLevel = true;
 		this.status = RESOURCES.Status.WAKEUP;
 		this.inventory = new ArrayList<Item>();
 	}
@@ -50,34 +43,45 @@ public class Player {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "Player [hungerlevel=" + hungerlevel + ", warmthlevel=" + warmthlevel + ", restLevel=" + restLevel
-				+ ", name=" + name + "]";
+	public int getHungerLevel() {
+		return needs.getHunger();  // Delegate to PlayerNeeds
 	}
 
-	public boolean getHungerlevel() {
-		return hungerlevel;
+	public int getWarmthLevel() {
+		return needs.getWarmth();  // Delegate to PlayerNeeds
 	}
 
-	public void setHungerlevel(boolean hungerlevel) {
-		this.hungerlevel = hungerlevel;
+	public int getRestLevel() {
+		return needs.getEnergy();  // Delegate to PlayerNeeds
 	}
 
-	public boolean getWarmthlevel() {
-		return warmthlevel;
+	public int getThirstLevel() {
+		return needs.getThirst();  // Delegate to PlayerNeeds
 	}
 
-	public void setWarmthlevel(boolean warmthlevel) {
-		this.warmthlevel = warmthlevel;
+	public void setHungerLevel(int hungerLevel) {
+		needs.setHunger(hungerLevel);  // Delegate to PlayerNeeds
 	}
 
-	public boolean getRestLevel() {
-		return restLevel;
+	public void setWarmthLevel(int warmthLevel) {
+		needs.setWarmth(warmthLevel);  // Delegate to PlayerNeeds
 	}
 
-	public void setRestLevel(boolean restLevel) {
-		this.restLevel = restLevel;
+	public void setRestLevel(int restLevel) {
+		needs.setEnergy(restLevel);  // Delegate to PlayerNeeds
+	}
+
+	public void setThirstLevel(int thirstLevel) {
+		needs.setThirst(thirstLevel);  // Delegate to PlayerNeeds
+	}
+
+
+	public List<Item> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(List<Item> inventory) {
+		this.inventory = inventory;
 	}
 
 	public String getName() {
@@ -93,14 +97,20 @@ public class Player {
 	}
 
 	public void setCurrentRoom(Room currentRoom) {
-	    this.currentRoom = currentRoom;
-	    notifyRoomChange();  // Notify subscribers when the room changes.
+		this.currentRoom = currentRoom;
+		notifyRoomChange();  // Notify subscribers when the room changes.
 	}
 
 	public void addItem(Item item) {
-		inventory.add(item);
-		notifyInventoryChange();  // Notify GUI (or any other subscriber)
+	    // Check if the item is already in the inventory
+	    if (!inventory.contains(item)) {
+	        inventory.add(item);
+	        notifyInventoryChange();  // Notify GUI (or any other subscriber)
+	    } else {
+	        System.out.println(item.getName() + " is already in your inventory.");
+	    }
 	}
+
 
 	public void removeItem(Item item) {
 		if (inventory.remove(item)) {
@@ -155,13 +165,52 @@ public class Player {
 	}
 
 	public String getInventoryNames() {
-	    return inventory.stream()
-	                    .map(Item::getName)
-	                    .collect(Collectors.joining(","));
+		return inventory.stream()
+				.map(Item::getName)
+				.collect(Collectors.joining(","));
 	}
 
 	public void clearInventory() {
 		this.inventory.clear();
+	}
+
+	public boolean hasItem(Item item) {
+		return inventory.contains(item);
+	}
+
+	public void tick() {
+		needs.tick();
+	}
+
+	public PlayerNeeds getNeeds() {
+		return needs;
+	}
+
+
+	public String eatItem(Item item, int saturationValue) {
+		if (!hasItem(item)) {
+			return "You don't have that item in your inventory.";
+		}
+
+		if (item.getType().equalsIgnoreCase("FOOD")) {
+			needs.eat(saturationValue);  // This would be implemented in PlayerNeeds
+			removeItem(item);       // Removes the item from inventory after eating
+			return "You eat the " + item.getName() + " and feel less hungry.";
+		} else {
+			return "That item isn't food.";
+		}
+	}
+
+	public String drink(int satuartion) {
+
+		needs.drink(satuartion);
+
+		return "you're thirst is quinched";
+	}
+
+	public String rest() {
+		needs.rest(100);  
+		return "You rest for a while and feel more energized.";
 	}
 
 

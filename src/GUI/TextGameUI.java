@@ -108,13 +108,11 @@ public class TextGameUI extends JFrame {
      * Updates the player info display with current hunger, rest, and warmth levels.
      */
     public void updatePlayerInfo() {
-        String hunger = user.getHungerlevel() ? "Full" : "Hungry";
-        String rest = user.getRestLevel() ? "Well rested" : "Tired";
-        String warmth = user.getWarmthlevel() ? "Warm" : "Cold";
-
-        userInfo.setText("Hunger: " + hunger);
-        userInfo.append("\nRest: " + rest);
-        userInfo.append("\nWarmth: " + warmth);
+     
+        userInfo.setText("Hunger: " + user.getHungerLevel());
+        userInfo.append("\nRest: " + user.getRestLevel());
+        userInfo.append("\nWarmth: " + user.getWarmthLevel());
+        userInfo.append("\nThirst :" +user.getThirstLevel());
     }
 
     /**
