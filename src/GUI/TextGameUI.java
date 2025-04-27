@@ -41,6 +41,7 @@ public class TextGameUI extends JFrame {
 
         user.addInventoryListener(this::updateInventory);
         user.addRoomChangeListener(this::displayRoomInfo);
+        user.addTickListener(this::updatePlayerInfo);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(RESOURCES.FRAME_SIZE);
@@ -98,7 +99,7 @@ public class TextGameUI extends JFrame {
         Room currentRoom = user.getCurrentRoom();
         if (currentRoom != null) {
             roomInfo.setText("You are in " + currentRoom.getName() + "\n");
-            roomInfo.append(currentRoom.getlistofPOINames());
+            roomInfo.append(currentRoom.getListOfPOINames());
         } else {
             roomInfo.setText("You are not in a valid room.\n");
         }
@@ -329,9 +330,7 @@ public class TextGameUI extends JFrame {
     private void displayMessage(String message) {
         textArea.append("====================\n" + message + "\n");
     }
-
-
-
+    
 
     private void registerPOIListeners() {
         for (POI poi : user.getCurrentRoom().getPois()) {

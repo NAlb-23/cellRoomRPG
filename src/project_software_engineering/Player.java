@@ -7,82 +7,50 @@ import java.util.stream.Collectors;
 import resources.*;
 import utils.RESOURCES;
 
+/**
+ * Represents a player in the game world, maintaining inventory, current room,
+ * survival needs, and status. Supports event listeners for room and inventory changes.
+ */
 public class Player {
 
+	// === Player Attributes ===
 	private String name;
 	private Room currentRoom;
 	private RESOURCES.Status status;
-
 	private List<Item> inventory;
 
+	// === Listeners ===
 	private List<Runnable> roomListeners = new ArrayList<>();
 	private List<Runnable> inventoryListeners = new ArrayList<>();
+	private List<Runnable> tickListeners = new ArrayList<>();
 
+	// === Player Survival Needs ===
 	private PlayerNeeds needs = new PlayerNeeds();
 
+	// === Constructors ===
+
+	/**
+	 * Default constructor initializing the player with test values.
+	 */
 	public Player() {
 		this.name = "TestPlayer";
 		this.currentRoom = new Room("Cell2", null);
 		this.status = RESOURCES.Status.WAKEUP;
-		this.inventory = new ArrayList<Item>();
-
+		this.inventory = new ArrayList<>();
 	}
 
+	/**
+	 * Constructs a player with a given name and starting room.
+	 * @param name the name of the player
+	 */
 	public Player(String name) {
 		this.name = name;
 		this.currentRoom = InstantiateResources.rooms.get(0);
 		this.status = RESOURCES.Status.WAKEUP;
-		this.inventory = new ArrayList<Item>();
+		this.inventory = new ArrayList<>();
 	}
 
-	public RESOURCES.Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(RESOURCES.Status status) {
-		this.status = status;
-	}
-
-	public int getHungerLevel() {
-		return needs.getHunger();  // Delegate to PlayerNeeds
-	}
-
-	public int getWarmthLevel() {
-		return needs.getWarmth();  // Delegate to PlayerNeeds
-	}
-
-	public int getRestLevel() {
-		return needs.getEnergy();  // Delegate to PlayerNeeds
-	}
-
-	public int getThirstLevel() {
-		return needs.getThirst();  // Delegate to PlayerNeeds
-	}
-
-	public void setHungerLevel(int hungerLevel) {
-		needs.setHunger(hungerLevel);  // Delegate to PlayerNeeds
-	}
-
-	public void setWarmthLevel(int warmthLevel) {
-		needs.setWarmth(warmthLevel);  // Delegate to PlayerNeeds
-	}
-
-	public void setRestLevel(int restLevel) {
-		needs.setEnergy(restLevel);  // Delegate to PlayerNeeds
-	}
-
-	public void setThirstLevel(int thirstLevel) {
-		needs.setThirst(thirstLevel);  // Delegate to PlayerNeeds
-	}
-
-
-	public List<Item> getInventory() {
-		return inventory;
-	}
-
-	public void setInventory(List<Item> inventory) {
-		this.inventory = inventory;
-	}
+	// === Getters and Setters ===
 
 	public String getName() {
 		return name;
@@ -96,123 +64,203 @@ public class Player {
 		return currentRoom;
 	}
 
+	/**
+	 * Sets the player's current room and notifies room listeners.
+	 * @param currentRoom the room to move the player to
+	 */
 	public void setCurrentRoom(Room currentRoom) {
 		this.currentRoom = currentRoom;
-		notifyRoomChange();  // Notify subscribers when the room changes.
+		notifyRoomChange();
 	}
 
+	public RESOURCES.Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(RESOURCES.Status status) {
+		this.status = status;
+	}
+
+	public List<Item> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(List<Item> inventory) {
+		this.inventory = inventory;
+	}
+
+	// === Inventory Management ===
+
+	/**
+	 * Adds an item to the player's inventory if it's not already present.
+	 * @param item the item to add
+	 */
 	public void addItem(Item item) {
-	    // Check if the item is already in the inventory
-	    if (!inventory.contains(item)) {
-	        inventory.add(item);
-	        notifyInventoryChange();  // Notify GUI (or any other subscriber)
-	    } else {
-	        System.out.println(item.getName() + " is already in your inventory.");
-	    }
+		if (!inventory.contains(item)) {
+			inventory.add(item);
+			notifyInventoryChange();
+		} else {
+			System.out.println(item.getName() + " is already in your inventory.");
+		}
 	}
 
-
+	/**
+	 * Removes an item from the inventory.
+	 * @param item the item to remove
+	 */
 	public void removeItem(Item item) {
 		if (inventory.remove(item)) {
 			System.out.println(item + " removed from inventory.");
-			notifyInventoryChange();  // notify here too!
+			notifyInventoryChange();
 		} else {
 			System.out.println(item + " was not found in inventory.");
 		}
 	}
 
-
+	/**
+	 * Returns a string listing all inventory item names.
+	 * @return formatted string of inventory items
+	 */
 	public String showInventory() {
 		StringBuilder sb = new StringBuilder();
-
-		for(Item item: inventory) {
-			sb.append(item.getName()+"\n");
+		for (Item item : inventory) {
+			sb.append(item.getName()).append("\n");
 		}
 		return sb.toString();
 	}
 
+	/**
+	 * Searches for an item in the inventory by name.
+	 * @param itemName name of the item
+	 * @return the item if found, null otherwise
+	 */
 	public Item getInventoryItemByName(String itemName) {
-		for(Item item: inventory) {
-			if(item.getName().toLowerCase().equals(itemName.toLowerCase())) {
+		for (Item item : inventory) {
+			if (item.getName().equalsIgnoreCase(itemName)) {
 				return item;
 			}
 		}
 		return null;
 	}
 
-
-
-	public void addInventoryListener(Runnable listener) {
-		inventoryListeners.add(listener);
+	/**
+	 * Clears the inventory.
+	 */
+	public void clearInventory() {
+		this.inventory.clear();
 	}
 
-	private void notifyInventoryChange() {
-		for (Runnable listener : inventoryListeners) {
-			listener.run();
-		}
+	/**
+	 * Checks if the player has a specific item.
+	 * @param item the item to check
+	 * @return true if present, false otherwise
+	 */
+	public boolean hasItem(Item item) {
+		return inventory.contains(item);
 	}
 
-
-
-	public void addRoomChangeListener(Runnable listener) {
-		roomListeners.add(listener);
-	}
-
-	private void notifyRoomChange() {
-		for (Runnable listener : roomListeners) {
-			listener.run();
-		}
-	}
-
+	/**
+	 * Returns comma-separated names of all items in the inventory.
+	 * @return string of item names
+	 */
 	public String getInventoryNames() {
 		return inventory.stream()
 				.map(Item::getName)
 				.collect(Collectors.joining(","));
 	}
 
-	public void clearInventory() {
-		this.inventory.clear();
-	}
+	// === Survival Needs Interface ===
 
-	public boolean hasItem(Item item) {
-		return inventory.contains(item);
-	}
+	public int getHungerLevel() { return needs.getHunger(); }
+	public double getWarmthLevel() { return needs.getWarmth(); }
+	public int getRestLevel() { return needs.getEnergy(); }
+	public int getThirstLevel() { return needs.getThirst(); }
 
+	public void setHungerLevel(int level) { needs.setHunger(level); }
+	public void setWarmthLevel(int level) { needs.setWarmth(level); }
+	public void setRestLevel(int level) { needs.setEnergy(level); }
+	public void setThirstLevel(int level) { needs.setThirst(level); }
+
+	/**
+	 * Advances game time and notifies tick listeners.
+	 */
 	public void tick() {
 		needs.tick();
+		notifyTickListeners();
 	}
 
 	public PlayerNeeds getNeeds() {
 		return needs;
 	}
 
-
+	/**
+	 * Eats a food item, increasing hunger level.
+	 * @param item the item to eat
+	 * @param saturationValue amount to restore
+	 * @return result message
+	 */
 	public String eatItem(Item item, int saturationValue) {
-		if (!hasItem(item)) {
-			return "You don't have that item in your inventory.";
-		}
+		if (!hasItem(item)) return "You don't have that item in your inventory.";
+		if (!"FOOD".equalsIgnoreCase(item.getType())) return "That item isn't food.";
 
-		if (item.getType().equalsIgnoreCase("FOOD")) {
-			needs.eat(saturationValue);  // This would be implemented in PlayerNeeds
-			removeItem(item);       // Removes the item from inventory after eating
-			return "You eat the " + item.getName() + " and feel less hungry.";
-		} else {
-			return "That item isn't food.";
-		}
+		needs.eat(saturationValue);
+		removeItem(item);
+		return "You eat the " + item.getName() + " and feel less hungry.";
 	}
 
-	public String drink(int satuartion) {
-
-		needs.drink(satuartion);
-
-		return "you're thirst is quinched";
+	/**
+	 * Drinks water to restore thirst level.
+	 * @param saturation amount to restore
+	 * @return result message
+	 */
+	public String drink(int saturation) {
+		needs.drink(saturation);
+		return "Your thirst is quenched.";
 	}
 
+	/**
+	 * Rest to regain energy.
+	 * @return result message
+	 */
 	public String rest() {
-		needs.rest(100);  
+		needs.rest(100);
 		return "You rest for a while and feel more energized.";
 	}
 
+	/**
+	 * Checks if player's survival needs are in a satisfactory state.
+	 * @return true if all needs are sufficiently met
+	 */
+	public boolean isNeedsSatisfied() {
+		return needs.getEnergy() >= 70 &&
+			   needs.getHunger() >= 70 &&
+			   needs.getThirst() == 100 &&
+			   needs.getWarmth() >= 50;
+	}
 
+	// === Listener Management ===
 
+	public void addInventoryListener(Runnable listener) {
+		inventoryListeners.add(listener);
+	}
+
+	public void addRoomChangeListener(Runnable listener) {
+		roomListeners.add(listener);
+	}
+
+	public void addTickListener(Runnable listener) {
+		tickListeners.add(listener);
+	}
+
+	private void notifyInventoryChange() {
+		inventoryListeners.forEach(Runnable::run);
+	}
+
+	private void notifyRoomChange() {
+		roomListeners.forEach(Runnable::run);
+	}
+
+	private void notifyTickListeners() {
+		tickListeners.forEach(Runnable::run);
+	}
 }

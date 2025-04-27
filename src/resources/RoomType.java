@@ -16,4 +16,9 @@ public enum RoomType {
     public String getRoomName() {
         return roomName;
     }
+
+    @Override
+    public String toString() {
+        return roomName;
+    }
 }

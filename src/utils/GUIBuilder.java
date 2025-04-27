@@ -685,6 +685,8 @@ public class GUIBuilder {
 	public static JLabel setupImage(String image,int h, int w) {
         ImageIcon imageIcon = new ImageIcon(image);
         ImageIcon logoIcon = GUIBuilder.resizeImage(imageIcon, h, w);
+        if (logoIcon == null) System.out.println("Failed to resize image: " + image);
+
         return new JLabel(logoIcon);
     }
 }

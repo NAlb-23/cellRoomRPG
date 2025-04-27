@@ -75,6 +75,7 @@ public class InstantiateResources {
 		POI cell1Floor = new POI("Floor", "Nothing interesting here");
 		cell1Floor.addInteraction("examine", "Nothing intresting here.");
 		
+		
 		POI bucket = new POI("Bucket", "A grimy old bucket.");
 		Item bucketItem = new Item("Bucket", "A nasty old bucket, still somewhat useful.");
 		bucket.addInteraction("examine", "You peer inside, finding a revolting mess.");
@@ -103,15 +104,25 @@ public class InstantiateResources {
 
 		POI window = new POI("Window", "You approach and examine the window. It’s located on the upper part of the wall, just past your reach. The window is sloped upwards, and you can see the night sky beyond it. A crescent moon and stars light up the sky. Besides crickets and the occasional breeze, you hear nothing from the outside. The window has vertical, metal bars preventing escape. You notice that the stone on the lower part of the window where the bars meet the wall show signs of damage and erosion.\n");
 		window.addInteraction("examine", window.getDescription());
-		window.addInteraction("use bar pole x4", "Using the long metal bar, you begin to work away the stone. It’s difficult and slow with dust and chips flying everywhere. You keep working away on it, eventually becoming drenched in sweat and exhausted. You don’t know how long it takes, but enough stone has been removed to expose the {window}’s metal bars. You believe you may be able to [pull] {bars}.\n");
+		window.addInteraction("use bar pole", "Using the long metal bar, you begin to work away the stone. It’s difficult and slow with dust and chips flying everywhere. You keep working away on it, eventually becoming drenched in sweat and exhausted. You don’t know how long it takes, but enough stone has been removed to expose the {window}’s metal bars. You believe you may be able to [pull] {bars}.\n");;
 		window.addInteraction("bring chair", "With the chair in place, you can reach the opening.");
 		window.addInteraction("use stone", "Smart thinking - you throw the stone aiming at the loose lower part of the window, you miss and the stone gets tossed outside.");
+		window.setLocked(true);
+		
+		POI windowBars = new POI("Bars", "");
+		windowBars.addInteraction("pull x1", "You take a moment to catch your breath and regain whatever energy you can. You wrap your hands around the bars and begin pulling. The stone begins to crack, and the bars begin to budge, ever so slightly. You will likely have to [pull] {bars} a few more times");
+		windowBars.addInteraction("pull x2", "You drag yourself back to the window and take a deep breath. Once again, you pull the bars with everything you can. They move, but still find themselves attached to the wall. You think one more attempt should be enough");
+		windowBars.addInteraction("pull x3", "You muster every bit of strength and energy possible and pull on the bars. This time, the bars do come loose from the wall. Both yourself and the bars fall to the ground. You find yourself exhausted. Now, you may be able to [escape] from the {window}");
+		windowBars.setIsHidden(true);
+		windowBars.setLocked(true);
 		
 		POI carvings = new POI("Wall", "Faded and unintelligible symbols cover the wall.");
 		carvings.addInteraction("examine", "You approach the walls to better see the carvings. The carvings seem to be in a language you do not understand. They are scattered all across the walls.\n");
 
 		POI cell3floor = new POI("floor", "Dirty and has shreds of cloth and debris, nothing useful for the player.\n");
 		cell3floor.addInteraction("examine", "You kneel down and see if there is anything of use on the floor. However, all you can find are dust, scraps of cloth, and small chips of either stone or wood. There is nothing of value on the floor.\n");
+		Item debris = new Item("debris", "flamable material");
+		cell3floor.addItem(debris);
 		
 		POI bed = new POI("Bed", "An old bed with a worn-out mattress.");
 		bed.addInteraction("examine", "You approach the old and dirty bed. A torn and hole-filled [blanket] sits on top of a dirty mattress. The mattress looks lumpy, as though hiding something.");
@@ -129,6 +140,7 @@ public class InstantiateResources {
 
 		cell3.addPOI(cell3Door);
 		cell3.addPOI(window);
+		cell3.addPOI(windowBars);
 		cell3.addPOI(carvings);
 		cell3.addPOI(cell3floor);
 		cell3.addPOI(bed);
