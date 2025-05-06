@@ -1,38 +1,63 @@
 PlayerName:nick
-CurrentRoom:Hallway
+CurrentRoom:Cell 1
 Status:GAMEPLAY
-Hunger:true
-Warmth:true
-Rest:true
-Inventory:Tool,Thin Metal Pick,Key
+Hunger:94
+Warmth:100.0
+Rest:94
+Thirst:88
+Room: Cell 2: isLocked:false
+  POI: Door: isHidden:false: isLocked:false
+  POI: Floor: isHidden:false: isLocked:true
+  POI: Wall: isHidden:false: isLocked:true
+  POI: Bars: isHidden:false: isLocked:true
+  POI: Drawer: isHidden:false: isLocked:true
+  POI: Locked Box: isHidden:false: isLocked:false
+  Item: Rag: type: item
+  Item: Thin Metal Pick: type: item
+  Item: Stone: type: item
+  Item: Rusted Plate: type: item
+  Item: Key: type: item
+Room: Cell 1: isLocked:false
+  POI: Door: isHidden:false: isLocked:false
+  POI: Wall: isHidden:false: isLocked:true
+  POI: Floor: isHidden:false: isLocked:true
+  POI: Bucket: isHidden:false: isLocked:false
+  POI: Mess: isHidden:false: isLocked:true
+  Item: Bucket: type: item
+Room: Cell 3: isLocked:false
+  POI: Door: isHidden:false: isLocked:true
+  POI: Window: isHidden:false: isLocked:true
+  POI: Bars: isHidden:true: isLocked:true
+  POI: Wall: isHidden:false: isLocked:true
+  POI: floor: isHidden:false: isLocked:true
+  POI: Bed: isHidden:false: isLocked:true
+  POI: Mattress: isHidden:false: isLocked:true
+  Item: debris: type: item
+  Item: Blanket: type: item
+  Item: Rope: type: item
+Room: Guard Room: isLocked:false
+  POI: Heavy Door: isHidden:false: isLocked:true
+  POI: Entrence Door: isHidden:false: isLocked:false
+  POI: Table: isHidden:false: isLocked:true
+  POI: Chair: isHidden:false: isLocked:true
+  POI: Shelves: isHidden:false: isLocked:true
+  POI: Barrel: isHidden:false: isLocked:true
+  Item: Matchbox: type: item
+  Item: Hardtack: type: Dried Food
+  Item: Dried Jerky: type: Dried Food
+Room: Hallway: isLocked:false
+  POI: Torches: isHidden:false: isLocked:true
+  POI: Cell 1 Door: isHidden:false: isLocked:false
+  POI: Cell 2 Door: isHidden:false: isLocked:false
+  POI: Cell 3 Door: isHidden:false: isLocked:true
+  POI: Guard Room Door: isHidden:false: isLocked:false
+  POI: cell 3 Bars: isHidden:false: isLocked:true
+  Item: Metal key loop: type: item
+  Item: Bar Pole: type: item
+Inventory:Tool,Metal key loop,Bar Pole
 Progress:====================
 Glad to see you’re up, nick. You’ve been out for a while…
 Why don’t you try to "look around"?
-====================
-> look around
-====================
-A faint torch flickers outside, barely illuminating your stone-walled, windowless cell. The heavy door and rusted bars stand between you and the hallway.
-
-Why don’t you try to [push] {door}?
-====================
-> push door
-====================
-You push against it, but it does not budge.
-
-Quite the optimist, aren’t you?
-Did you honestly expect it to be that simple?
-You’ll have to try harder than that.
-Why don’t you more closely “examine door”?
-====================
-> examine door
-====================
-Due to your only light source being outside of your cell, you cannot visually make out any details on the cell-side of the door.
-
-You reach out to touch it. It feels cold, hard, and solid. 
-You find no cracks, gaps, or holes.
-
-What moronic builder would design a cell door that can be opened from the inside?
-Come on… you’re better than this. I thought you would immediately “examine door’s exterior” instead.
 ====================
 > examine door's exterior
 ====================
@@ -67,13 +92,36 @@ the Drawer is starting to crack open, try stricking again.
 ====================
 > use stone on drawer
 ====================
-After two solid strikes, the drawer gives way, revealing a [Locked Box]. However, the stone crumbles apart as well.
+You try use stone but nothing happens.
 ====================
 > use thin metal pick on locked box
 ====================
-You pick the lock and retrieve a [Key].
+You pick the lock and retrieve a [Key]. The metal pick got wedged in the box, you can't seem to take it out anymore.
 ====================
 > use key on door
 ====================
-You unlock the door. Freedom is one step closer.
+You unlock the door. Freedom is one step closer. 
+ you can try to {Open} [Door] now
+====================
+> open door
+====================
+
+You step into Hallway.
+====================
+> use key on cell 1 door
+====================
+The door unlocks!  It takes more work than the door from cell 2, but you manage to open the door. However, upon trying to remove the key, it snaps. You’re left with the loop half while the other half is now stuck inside the door.
+
+====================
+> take bar pole
+====================
+Bar Pole added to inventory.
+====================
+> enter cell 1
+====================
+You enter cell 1
+====================
+> dump bucket
+====================
+You empty the bucket. Nothing useful remains.
 

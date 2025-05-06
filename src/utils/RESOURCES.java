@@ -35,7 +35,7 @@ public class RESOURCES {
     public static final String DEFAULT_ROOM_TEXT = "You wake up in cell 2";
     public static final String ROOM_LABEL = "Your Surrounding: ";
     public static final String PLAYER_LABEL = "Player Stats: ";
-    public static final String INVENTORY_LABEL = "Invintory: ";
+    public static final String INVENTORY_LABEL = "Inventory: ";
     public static final String START_MESSAGE = "Glad to see you’re up, %s. You’ve been out for a while…\nWhy don’t you try to \"look around\"?";
 	
 	
@@ -45,6 +45,7 @@ public class RESOURCES {
 	public static final ImageIcon LOAD_ICON = GUIBuilder.resizeImageIcon(new ImageIcon(RESLOC + "load_icon_white.png"), 20, 20);
 	public static final ImageIcon NEWGAME_ICON = GUIBuilder.resizeImageIcon(new ImageIcon(RESLOC + "add_icon_white.png"), 20, 20);
 	public static final ImageIcon OK_ICON = GUIBuilder.resizeImageIcon(new ImageIcon(RESLOC + "ok_icon.png"), 20, 20);
+	public static final ImageIcon SAVE_ICON = GUIBuilder.resizeImageIcon(new ImageIcon(RESLOC + "save_icon.png"), 20, 20);
 	
 	public enum Status {
 		WAKEUP,

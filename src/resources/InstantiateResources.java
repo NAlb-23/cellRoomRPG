@@ -168,8 +168,10 @@ public class InstantiateResources {
 
 		POI shelves = new POI("Shelves", "Dusty wooden shelves lined with old supplies.");
 		Item hardtack = new Item("Hardtack", "A rock-hard survival biscuit.");
-
+		hardtack.setType("Dried Food");
+		
 		Item jerky = new Item("Dried Jerky", "Dry, tough strips of preserved meat.");
+		jerky.setType("Dried Food");
 
 		shelves.addItem(hardtack);
 		shelves.addItem(jerky);

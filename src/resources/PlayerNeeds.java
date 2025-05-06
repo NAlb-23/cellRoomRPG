@@ -1,10 +1,14 @@
-package project_software_engineering;
+package resources;
+
+import java.io.Serializable;
+
+import project_software_engineering.GameLogic;
 
 /**
  * Manages the player's survival needs such as hunger, thirst, warmth, and energy.
  * These stats gradually decay over time and can be restored using specific actions.
  */
-public class PlayerNeeds {
+public class PlayerNeeds{
 
     private int hunger = 100;
     private int thirst = 100;
@@ -20,7 +24,7 @@ public class PlayerNeeds {
     public void tick() {
         hunger = Math.max(0, hunger - DECAY_RATE);
         thirst = Math.max(0, thirst - DECAY_RATE * 2); // Thirst decays faster
-        warmth = Math.max(0, warmth - (DECAY_RATE / 2)); // Warmth decays slowly
+        warmth = Math.max(0, warmth - (DECAY_RATE / 2.0)); // Warmth decays slowly
         energy = Math.max(0, energy - DECAY_RATE);
 
         checkCriticalNeeds();
@@ -107,7 +111,7 @@ public class PlayerNeeds {
         return warmth;
     }
 
-    public void setWarmth(int warmth) {
+    public void setWarmth(double warmth) {
         this.warmth = warmth;
     }
 

@@ -11,6 +11,7 @@ import resources.Item;
 import resources.POI;
 import resources.Room;
 import resources.RoomType;
+import resources.Player;
 import utils.RESOURCES;
 
 public class GameLogic {
@@ -83,11 +84,26 @@ public class GameLogic {
 		case "enter" -> handleEnterCommand(target);
 		case "exit" -> handleExitCommand(target);
 		case "combine" -> handleCombine(msg);
+		case "drag" -> handleDrag(msg);
 		default -> handleSimpleCommand(command, target);
 		};
 
 		return gatherPassiveMessages(result);
 	}
+
+	private static String handleDrag(String msg) {
+	    String[] words = msg.trim().toLowerCase().split(" ");
+	    
+	    if (words.length >= 4 && words[0].equals("drag") && words[2].equals("to")) {
+	        String object = words[1];
+	        String target = words[3];
+	        escapeConditions++;
+	        return "Dragging " + object + " to " + target + " in cell 3, and place the bucket over it, now you can reach the window to escape.";
+	    }
+
+	    return "Invalid drag command.";
+	}
+
 
 	private static String handleCombine(String msg) {
 		if(msg.toLowerCase().contains("rope")||msg.toLowerCase().contains("rag") || msg.toLowerCase().contains("blanket")) {
@@ -266,7 +282,7 @@ public class GameLogic {
 				return poi.interAct("open with tool");
 			}
 			if (itemName.equalsIgnoreCase("Dried Jerky") ||itemName.equalsIgnoreCase("Hardtack")) {
-				item.setType("food");
+				item.setType("FOOD");
 				return poi.interAct("soak food");
 			}
 			break;
@@ -611,12 +627,10 @@ public class GameLogic {
 	}
 
 	private static boolean checkEscapeCondition() {
+		System.out.print(escapeConditions);
 		if(player.isNeedsSatisfied() && escapeConditions == 3) {
 			return true;
 		}
 		return false;
 	}
-
-
-
 }

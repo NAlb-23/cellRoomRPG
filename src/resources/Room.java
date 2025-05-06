@@ -1,5 +1,6 @@
 package resources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import java.util.Objects;
  * items, and can be locked or unlocked.
  */
 public class Room {
+	
     private String name;
     private String description;
     private List<POI> pois = new ArrayList<>();

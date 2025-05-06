@@ -1,5 +1,6 @@
-package project_software_engineering;
+package resources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,7 +178,7 @@ public class Player {
 	public int getThirstLevel() { return needs.getThirst(); }
 
 	public void setHungerLevel(int level) { needs.setHunger(level); }
-	public void setWarmthLevel(int level) { needs.setWarmth(level); }
+	public void setWarmthLevel(double warmth) { needs.setWarmth(warmth); }
 	public void setRestLevel(int level) { needs.setEnergy(level); }
 	public void setThirstLevel(int level) { needs.setThirst(level); }
 
@@ -202,7 +203,7 @@ public class Player {
 	public String eatItem(Item item, int saturationValue) {
 		if (!hasItem(item)) return "You don't have that item in your inventory.";
 		if (!"FOOD".equalsIgnoreCase(item.getType())) return "That item isn't food.";
-
+		if ("Dried FOOD".equalsIgnoreCase(item.getType())) return "The food is too hard to eat, try soaking it first";
 		needs.eat(saturationValue);
 		removeItem(item);
 		return "You eat the " + item.getName() + " and feel less hungry.";

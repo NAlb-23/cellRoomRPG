@@ -7,10 +7,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import project_software_engineering.Driver;
-import project_software_engineering.Player;
 import resources.POI;
 import resources.Room;
+import resources.Player;
 import utils.GUIBuilder;
+import utils.GameLoader;
+import utils.GameSaver;
 import utils.RESOURCES;
 
 /**
@@ -136,7 +138,7 @@ public class TextGameUI extends JFrame {
      * Loads the previously saved game state.
      */
     public void loadGame() {
-        Driver.LoadGameState(this);
+        GameLoader.LoadGameState(this);
     }
 
     /**
@@ -173,8 +175,12 @@ public class TextGameUI extends JFrame {
         JButton QButton = GUIBuilder.createIconedButton(
                 "", RESOURCES.HELP_ICON, getBackground(),
                 e -> JOptionPane.showMessageDialog(null, RESOURCES.HELP_MESSAGE), "Help", false);
+        
+        JButton SButton = GUIBuilder.createIconedButton(
+                "", RESOURCES.SAVE_ICON, getBackground(),
+                e -> handleSaveButton(), "Exit", false);
 
-        JPanel header = GUIBuilder.createHeaderPanel(title, RESOURCES.DARK_BROWN, QButton, xButton);
+        JPanel header = GUIBuilder.createHeaderPanel(title, RESOURCES.DARK_BROWN, QButton, xButton, SButton);
         add(header, BorderLayout.NORTH);
     }
 
@@ -348,12 +354,16 @@ public class TextGameUI extends JFrame {
 
         switch (choice) {
             case JOptionPane.YES_OPTION -> {
-                Driver.SaveGameState(textArea.getText());
+                GameSaver.SaveGameState(textArea.getText());
                 System.exit(0);
             }
             case JOptionPane.NO_OPTION -> System.exit(0);
             case JOptionPane.CANCEL_OPTION, JOptionPane.CLOSED_OPTION -> {
             }
         }
+    }
+    
+    private void handleSaveButton() {
+    	GameSaver.SaveGameState(textArea.getText());
     }
 }
