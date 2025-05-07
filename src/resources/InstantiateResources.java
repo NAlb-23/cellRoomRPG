@@ -112,7 +112,7 @@ public class InstantiateResources {
 		POI windowBars = new POI("Bars", "");
 		windowBars.addInteraction("pull x1", "You take a moment to catch your breath and regain whatever energy you can. You wrap your hands around the bars and begin pulling. The stone begins to crack, and the bars begin to budge, ever so slightly. You will likely have to [pull] {bars} a few more times");
 		windowBars.addInteraction("pull x2", "You drag yourself back to the window and take a deep breath. Once again, you pull the bars with everything you can. They move, but still find themselves attached to the wall. You think one more attempt should be enough");
-		windowBars.addInteraction("pull x3", "You muster every bit of strength and energy possible and pull on the bars. This time, the bars do come loose from the wall. Both yourself and the bars fall to the ground. You find yourself exhausted. Now, you may be able to [escape] from the {window}");
+		windowBars.addInteraction("pull x3", "You muster every bit of strength and energy possible and pull on the bars. This time, the bars do come loose from the wall. Both yourself and the bars fall to the ground. You find yourself exhausted. You might be able to escape through the window, you just need a long rope!");
 		windowBars.setIsHidden(true);
 		windowBars.setLocked(true);
 		
@@ -131,8 +131,8 @@ public class InstantiateResources {
 		bed.addItem(blanket);
 		
 		POI mattress = new POI("Mattress", "The mattress fabric is patched and rough.");
-		Item rope = new Item("Rope", "A knotted rope made from strips of fabric. you notice that you could rip the stiches if you have the right tool.");
-		mattress.addInteraction("examine", "One patch looks freshly sewn.");
+		Item rope = new Item("Rope", "A knotted rope made from strips of fabric. You can make it longer by combining it with somethig");
+		mattress.addInteraction("examine", "One patch looks freshly sewn. you notice that you could rip the stiches if you have the right tool.");
 		mattress.addInteraction("use tool", "You cut open the patch and pull out a [Rope].");
 		mattress.addItem(rope);
 		

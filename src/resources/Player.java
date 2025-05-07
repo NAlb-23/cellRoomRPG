@@ -201,12 +201,17 @@ public class Player {
 	 * @return result message
 	 */
 	public String eatItem(Item item, int saturationValue) {
-		if (!hasItem(item)) return "You don't have that item in your inventory.";
-		if (!"FOOD".equalsIgnoreCase(item.getType())) return "That item isn't food.";
-		if ("Dried FOOD".equalsIgnoreCase(item.getType())) return "The food is too hard to eat, try soaking it first";
-		needs.eat(saturationValue);
-		removeItem(item);
-		return "You eat the " + item.getName() + " and feel less hungry.";
+	    if (!hasItem(item)) {
+	        return "You don't have that item in your inventory.";
+	    } else if ("Dried FOOD".equalsIgnoreCase(item.getType())) {
+	        return "The food is too hard to eat, try soaking it first.";
+	    } else if (!"FOOD".equalsIgnoreCase(item.getType())) {
+	        return "That item isn't food.";
+	    } else {
+	        needs.eat(saturationValue);
+	        removeItem(item);
+	        return "You eat the " + item.getName() + " and feel less hungry.";
+	    }
 	}
 
 	/**
@@ -235,7 +240,7 @@ public class Player {
 	public boolean isNeedsSatisfied() {
 		return needs.getEnergy() >= 70 &&
 			   needs.getHunger() >= 70 &&
-			   needs.getThirst() == 100 &&
+			   needs.getThirst() >= 90 &&
 			   needs.getWarmth() >= 50;
 	}
 

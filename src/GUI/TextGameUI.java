@@ -178,9 +178,9 @@ public class TextGameUI extends JFrame {
         
         JButton SButton = GUIBuilder.createIconedButton(
                 "", RESOURCES.SAVE_ICON, getBackground(),
-                e -> handleSaveButton(), "Exit", false);
+                e -> handleSaveButton(), "Save", false);
 
-        JPanel header = GUIBuilder.createHeaderPanel(title, RESOURCES.DARK_BROWN, QButton, xButton, SButton);
+        JPanel header = GUIBuilder.createHeaderPanel(title, RESOURCES.DARK_BROWN, SButton, QButton, xButton);
         add(header, BorderLayout.NORTH);
     }
 

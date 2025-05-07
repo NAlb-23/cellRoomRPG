@@ -95,6 +95,10 @@ public class GameLoader {
                         if (item == null && itemName.equalsIgnoreCase("Tool")) {
                             item = new Item("Tool", "A makeshift tool created by wrapping a rag around a rusted plate. You can [Unwrap] {tool} to get back the object or [use] {rag} on {Rusted Plate} to remake it.");
                         }
+                        
+                        if (item == null && itemName.equalsIgnoreCase("long rope")) {
+                            item = new Item("long rope", "Rope + rag + blanket");
+                        }
 
                         if (item != null) {
                             inventory.add(item);

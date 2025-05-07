@@ -119,6 +119,7 @@ public class GameLogic {
 				player.addItem(new Item("Long Rope", "Blanket + Rag + Rope"));
 				return result;
 			}
+			
 		}
 		return "items cannot be combined";
 	}
@@ -254,7 +255,7 @@ public class GameLogic {
 			else if (itemName.equalsIgnoreCase("long rope")) {
 				if(!poi.isLocked()) {
 					if(checkEscapeCondition())
-						return processEscapeSequence(poi.toString());
+						return processEscapeSequence("use long rope on window");
 					else
 						return "you're stats are too low, try resting, eating or drinking first.";
 				}
@@ -273,7 +274,7 @@ public class GameLogic {
 		case "mattress":
 			if (itemName.equals("tool")) {
 				player.addItem(player.getCurrentRoom().getItemByName("rope"));
-				return poi.interAct("use tool") + "\n\n your stomach began to rumble, if you want to make it out you need to find something to eat";
+				return poi.interAct("use tool");
 			}
 			break;
 		case "barrel":
@@ -594,7 +595,7 @@ public class GameLogic {
 	    String command = msg.trim().toLowerCase();
 
 	    return switch (command) {
-	        case "window" -> 
+	        case "use long rope on window" -> 
 	            "The window is too high to reach. Try [drag] {chair} from {guard room}.";
 	        case "drag chair from guard room" -> 
 	            "Although you can throw the rope out the window, there's no way to tell if it's long enough. "
@@ -627,8 +628,8 @@ public class GameLogic {
 	}
 
 	private static boolean checkEscapeCondition() {
-		System.out.print(escapeConditions);
-		if(player.isNeedsSatisfied() && escapeConditions == 3) {
+		System.out.println("Escape condition count:" +escapeConditions);
+		if(player.isNeedsSatisfied() && escapeConditions >= 3) {
 			return true;
 		}
 		return false;

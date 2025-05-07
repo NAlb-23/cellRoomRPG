@@ -31,7 +31,7 @@ public class RESOURCES {
  // Texts
     public static final String TITLE = "Escape Room RPG";
     public static final String HEADER_TITLE = "Dungeon Escape";
-    public static final String HELP_MESSAGE = "Hang in there, help is on the way";
+    public static final String HELP_MESSAGE = "The walls do not speak. You remain unheard.";
     public static final String DEFAULT_ROOM_TEXT = "You wake up in cell 2";
     public static final String ROOM_LABEL = "Your Surrounding: ";
     public static final String PLAYER_LABEL = "Player Stats: ";

@@ -1,28 +1,28 @@
 PlayerName:nick
-CurrentRoom:Cell 1
+CurrentRoom:Cell 2
 Status:GAMEPLAY
-Hunger:94
+Hunger:100
 Warmth:100.0
-Rest:94
-Thirst:88
-Room: Cell 2: isLocked:false
-  POI: Door: isHidden:false: isLocked:false
+Rest:100
+Thirst:100
+Room: Cell 2: isLocked:true
+  POI: Door: isHidden:false: isLocked:true
   POI: Floor: isHidden:false: isLocked:true
   POI: Wall: isHidden:false: isLocked:true
   POI: Bars: isHidden:false: isLocked:true
   POI: Drawer: isHidden:false: isLocked:true
-  POI: Locked Box: isHidden:false: isLocked:false
+  POI: Locked Box: isHidden:true: isLocked:true
   Item: Rag: type: item
   Item: Thin Metal Pick: type: item
   Item: Stone: type: item
   Item: Rusted Plate: type: item
   Item: Key: type: item
-Room: Cell 1: isLocked:false
+Room: Cell 1: isLocked:true
   POI: Door: isHidden:false: isLocked:false
   POI: Wall: isHidden:false: isLocked:true
   POI: Floor: isHidden:false: isLocked:true
-  POI: Bucket: isHidden:false: isLocked:false
-  POI: Mess: isHidden:false: isLocked:true
+  POI: Bucket: isHidden:false: isLocked:true
+  POI: Mess: isHidden:true: isLocked:true
   Item: Bucket: type: item
 Room: Cell 3: isLocked:false
   POI: Door: isHidden:false: isLocked:true
@@ -45,16 +45,16 @@ Room: Guard Room: isLocked:false
   Item: Matchbox: type: item
   Item: Hardtack: type: Dried Food
   Item: Dried Jerky: type: Dried Food
-Room: Hallway: isLocked:false
+Room: Hallway: isLocked:true
   POI: Torches: isHidden:false: isLocked:true
-  POI: Cell 1 Door: isHidden:false: isLocked:false
+  POI: Cell 1 Door: isHidden:false: isLocked:true
   POI: Cell 2 Door: isHidden:false: isLocked:false
   POI: Cell 3 Door: isHidden:false: isLocked:true
   POI: Guard Room Door: isHidden:false: isLocked:false
   POI: cell 3 Bars: isHidden:false: isLocked:true
   Item: Metal key loop: type: item
   Item: Bar Pole: type: item
-Inventory:Tool,Metal key loop,Bar Pole
+Inventory:
 Progress:====================
 Glad to see you’re up, nick. You’ve been out for a while…
 Why don’t you try to "look around"?
@@ -73,55 +73,4 @@ Good luck, friend.
 
 [Tip] You can quickly grasp your surroundings by typing: “look around”.
 You can inspect something more closely by typing: “examine [object]”.
-====================
-> take rag
-====================
-Rag added to inventory.
-====================
-> use rag on rusted plate
-====================
-You carefully wrap the sharp plate with the rag, creating a new tool. The 'Tool' has been added to your inventory.
-====================
-> use tool on stone
-====================
-You pry the stone loose, revealing a [Thin Metal Pick] and [Heavy Stone].
-====================
-> use stone on drawer
-====================
-the Drawer is starting to crack open, try stricking again.
-====================
-> use stone on drawer
-====================
-You try use stone but nothing happens.
-====================
-> use thin metal pick on locked box
-====================
-You pick the lock and retrieve a [Key]. The metal pick got wedged in the box, you can't seem to take it out anymore.
-====================
-> use key on door
-====================
-You unlock the door. Freedom is one step closer. 
- you can try to {Open} [Door] now
-====================
-> open door
-====================
-
-You step into Hallway.
-====================
-> use key on cell 1 door
-====================
-The door unlocks!  It takes more work than the door from cell 2, but you manage to open the door. However, upon trying to remove the key, it snaps. You’re left with the loop half while the other half is now stuck inside the door.
-
-====================
-> take bar pole
-====================
-Bar Pole added to inventory.
-====================
-> enter cell 1
-====================
-You enter cell 1
-====================
-> dump bucket
-====================
-You empty the bucket. Nothing useful remains.
 
