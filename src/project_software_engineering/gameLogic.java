@@ -84,25 +84,12 @@ public class GameLogic {
 		case "enter" -> handleEnterCommand(target);
 		case "exit" -> handleExitCommand(target);
 		case "combine" -> handleCombine(msg);
-		case "drag" -> handleDrag(msg);
 		default -> handleSimpleCommand(command, target);
 		};
 
 		return gatherPassiveMessages(result);
 	}
 
-	private static String handleDrag(String msg) {
-	    String[] words = msg.trim().toLowerCase().split(" ");
-	    
-	    if (words.length >= 4 && words[0].equals("drag") && words[2].equals("to")) {
-	        String object = words[1];
-	        String target = words[3];
-	        escapeConditions++;
-	        return "Dragging " + object + " to " + target + " in cell 3, and place the bucket over it, now you can reach the window to escape.";
-	    }
-
-	    return "Invalid drag command.";
-	}
 
 
 	private static String handleCombine(String msg) {
@@ -123,6 +110,7 @@ public class GameLogic {
 		}
 		return "items cannot be combined";
 	}
+
 
 	private static String lookAround() {
 		return player.getCurrentRoom().getDescription();
@@ -165,34 +153,33 @@ public class GameLogic {
 
 		return "There's no '" + targetName + "' here.";
 	}
-
-
+	
 	private static String handleUseOnItem(Item item, Item target) {
-		if (item.getName().equalsIgnoreCase("rag") && target.getName().equalsIgnoreCase("rusted plate")) {
+		String itemName = item.getName().toLowerCase();
+		String targetName = target.getName().toLowerCase();
+
+		if (itemName.equals("rag") && targetName.equals("rusted plate")) {
 			player.removeItem(item);
 			player.removeItem(target);
-			Item tool = new Item("Tool", "A makeshift tool created by wrapping a rag around a rusted plate. you can [Unwrap] {tool} to get back the object or [use] {rag} on {Rusted Plate} to remake it.");
+			Item tool = new Item("Tool", "A makeshift tool created by wrapping a rag around a rusted plate. You can [Unwrap] {tool} to get back the object or [use] {rag} on {Rusted Plate} to remake it.");
 			player.addItem(tool);
 			return "You carefully wrap the sharp plate with the rag, creating a new tool. The 'Tool' has been added to your inventory.";
 		}
 
-		if (item.getName().equalsIgnoreCase("tool") && target.getName().equalsIgnoreCase("stone")) {
+		if (itemName.equals("tool") && targetName.equals("stone")) {
 			player.addItem(player.getCurrentRoom().getItemByName("Stone"));
 			player.addItem(player.getCurrentRoom().getItemByName("Thin Metal Pick"));
 			return player.getCurrentRoom().getPOIbyName("Wall").interAct("pry with tool");
 		}
 
-		if(target.getName().equalsIgnoreCase("debris") && item.getName().equalsIgnoreCase("Matchbox")) {
+		if (itemName.equals("matchbox") && targetName.equals("debris")) {
 			player.removeItem(target);
 			player.setWarmthLevel(100);
-			return "You light the flamable debris on fire, it's small but enough to give somw warmth. You carefully take the fir to the corner of the room, careful not to cause it to get out of hand";
+			return "You light the flammable debris on fire. It's small but enough to give some warmth. You carefully take the fire to the corner of the room, careful not to let it get out of hand.";
 		}
 
 		return "Using the " + item.getName() + " on " + target.getName() + " has no effect.";
 	}
-
-
-
 
 	private static String handleUseOnPOI(Item item, POI poi) {
 		String itemName = item.getName().toLowerCase();
@@ -200,97 +187,105 @@ public class GameLogic {
 		String roomName = player.getCurrentRoom().getName().toLowerCase();
 
 		switch (poiName) {
-		case "drawer":
-			if (itemName.equals("stone")) {
-				if (useCount++ < 1) return "the Drawer is starting to crack open, try stricking again.";
-				useCount = 0;
-				poi = player.getCurrentRoom().getPOIbyName("Locked Box");
-				poi.setIsHidden(false);
-				player.removeItem(item);
-				return poi.interAct("use stone");
-			}
-			break;
-		case "locked box":
-			if (itemName.equals("thin metal pick") && !poi.getIsHidden()) {
-				player.addItem(player.getCurrentRoom().getItemByName("Key"));
-				poi.setLocked(false);
-				player.removeItem(item);
-				return poi.interAct("use thin metal pick");
-			}
-			break;
-		case "door":
-			if (itemName.equals("key")) {
-				poi.setLocked(false);
-				InstantiateResources.findRoomByName(RoomType.HALLWAY.toString()).setLocked(false);
-				InstantiateResources.findRoomByName(RoomType.CELL_2.toString()).setLocked(false);
-				return poi.interAct("use key");
-			}
-			break;
-		case "cell 1 door":
-			if (itemName.equals("key")) {
-				poi.setLocked(false);
-				player.removeItem(item);
-				player.addItem(InstantiateResources.findItemByName("Metal key loop"));
-				InstantiateResources.findRoomByName(RoomType.CELL_1.toString()).setLocked(false);
-				return poi.interAct("use key1");
-			}
-			break;
-		case "cell 2 door":
-			if (itemName.equals("key")) return "The door is already unlocked.";
-			break;
-		case "cell 3 door":
-			if (itemName.equals("key")) return poi.interAct("use key1");
-			break;
-		case "window":
-			if (itemName.equals("stone")) {
-				player.removeItem(item);
-				return poi.interAct("use stone");
-			} else if (itemName.equals("bar pole")) {
-				if (poi.isLocked()) return "the window is too high to reach. you need to use something on the floor.";
-
-				player.getCurrentRoom().getPOIbyName("Bars").setIsHidden(false);
-				player.getCurrentRoom().getPOIbyName("Bars").setLocked(false);
-				return poi.interAct("use bar pole");
-			}
-			else if (itemName.equalsIgnoreCase("long rope")) {
-				if(!poi.isLocked()) {
-					if(checkEscapeCondition())
-						return processEscapeSequence("use long rope on window");
-					else
-						return "you're stats are too low, try resting, eating or drinking first.";
+			case "drawer":
+				if (itemName.equals("stone")) {
+					if (useCount++ < 1) return "The drawer is starting to crack open, try striking again.";
+					useCount = 0;
+					POI lockedBox = player.getCurrentRoom().getPOIbyName("Locked Box");
+					lockedBox.setIsHidden(false);
+					player.getCurrentRoom().getPOIbyName("Drawer").setIsHidden(true);
+					player.removeItem(item);
+					return lockedBox.interAct("use stone");
 				}
-			}
-			
-			break;
-		case "heavy door":
-			if (itemName.equals("bar pole")) return "you bang repeatedly on the door, but nothing happens. there should be another way out";
-			break;
-		case "floor":
-			if (roomName.equalsIgnoreCase(RoomType.CELL_3.toString()) && itemName.equals("bucket")) {
-				player.getCurrentRoom().getPOIbyName("window").setLocked(false);
-				return "You place the bucket on the floor next the window, its just high enough for you to reach with a pole.";
-			}
-			break;
-		case "mattress":
-			if (itemName.equals("tool")) {
-				player.addItem(player.getCurrentRoom().getItemByName("rope"));
-				return poi.interAct("use tool");
-			}
-			break;
-		case "barrel":
-			if (itemName.equals("tool")) {
-				poi.setLocked(false);
-				return poi.interAct("open with tool");
-			}
-			if (itemName.equalsIgnoreCase("Dried Jerky") ||itemName.equalsIgnoreCase("Hardtack")) {
-				item.setType("FOOD");
-				return poi.interAct("soak food");
-			}
-			break;
+				break;
+
+			case "locked box":
+				if (itemName.equals("thin metal pick") && !poi.getIsHidden()) {
+					player.addItem(player.getCurrentRoom().getItemByName("Key"));
+					poi.setLocked(false);
+					player.removeItem(item);
+					return poi.interAct("use thin metal pick");
+				}
+				break;
+
+			case "door":
+				if (itemName.equals("key")) {
+					unlockConnectedRooms(RoomType.HALLWAY, RoomType.CELL_2);
+					poi.setLocked(false);
+					return poi.interAct("use key")+"\n you can now navigate between rooms, try {Enter} Hallway or {Exit} Cell 2";
+				}
+				break;
+
+			case "cell 1 door":
+				if (itemName.equals("key")) {
+					poi.setLocked(false);
+					player.removeItem(item);
+					player.addItem(InstantiateResources.findItemByName("Metal key loop"));
+					InstantiateResources.findRoomByName(RoomType.CELL_1.toString()).setLocked(false);
+					return poi.interAct("use key1");
+				}
+				break;
+
+			case "cell 2 door":
+				if (itemName.equals("key")) return "The door is already unlocked.";
+				break;
+
+			case "cell 3 door":
+				if (itemName.equals("key")) return poi.interAct("use key1");
+				break;
+
+			case "window":
+				if (itemName.equals("stone")) {
+					player.removeItem(item);
+					return poi.interAct("use stone");
+				} else if (itemName.equals("bar pole")) {
+					if (poi.isLocked()) return "The window is too high to reach. You need to use something on the floor. Try using the [bucket]";
+					unlockPOI("Bars");
+					return poi.interAct("use bar pole");
+				} else if (itemName.equals("long rope")) {
+					if (!poi.isLocked()) {
+						return checkEscapeCondition() ?
+							processEscapeSequence("use long rope on window") :
+							"Your stats are too low. Try resting, eating, or drinking first.";
+					}
+				}
+				break;
+
+			case "heavy door":
+				if (itemName.equals("bar pole"))
+					return "You bang repeatedly on the door, but nothing happens. There should be another way out.";
+				break;
+
+			case "floor":
+				if (roomName.equals(RoomType.CELL_3.toString()) && itemName.equals("bucket")) {
+					player.getCurrentRoom().getPOIbyName("window").setLocked(false);
+					return "You place the bucket on the floor next to the window. It's just high enough for you to reach with a pole.";
+				}
+				break;
+
+			case "mattress":
+				if (itemName.equals("tool")) {
+					player.addItem(player.getCurrentRoom().getItemByName("rope"));
+					return poi.interAct("use tool");
+				}
+				break;
+
+			case "barrel":
+				if (itemName.equals("tool")) {
+					poi.setLocked(false);
+					return poi.interAct("open with tool");
+				}
+				if (itemName.equals("dried jerky") || itemName.equals("hardtack")) {
+					item.setType("FOOD");
+					return poi.interAct("soak food");
+				}
+				break;
 		}
 
 		return "Using the " + item.getName() + " on " + poi.getName() + " has no effect.";
 	}
+
+	
 
 	private static String handleSimpleCommand(String command, String target) {
 		if(command.equalsIgnoreCase("drink")) return handleDrinkCommand();
@@ -387,10 +382,14 @@ public class GameLogic {
 		if (player.hasItem(thisItem)) {
 			return "You already have the " + itemName + ".";
 		}
+		
+		if(itemName.equals("Rag") && player.getInventoryItemByName("Tool")!= null) {
+			return "You already used the " + itemName + " to make a [tool].";
+		}
 
 		// Special case: Stone requires a tool
 		if (itemName.equalsIgnoreCase("Stone")) {
-			return "The stone is wedged tight — you need a tool to pry it loose.";
+			return "The [stone] is wedged tight — you need a tool to pry it loose.";
 		}
 
 		// Special case: Thin Metal Pick isn't visible until stone is moved
@@ -521,6 +520,10 @@ public class GameLogic {
 	public static void setPlayerStartRoom(Room room) {
 		player.setCurrentRoom(room);
 	}
+	
+	public static int getEscapeCount() {
+		return escapeConditions;
+	}
 
 
 	public static void addMessage(String msg) {
@@ -625,6 +628,23 @@ public class GameLogic {
 	        default -> 
 	            "You try to '" + msg + "', but nothing happens.";
 	    };
+	}
+	
+	private static void unlockConnectedRooms(RoomType... rooms) {
+		for (RoomType room : rooms) {
+			InstantiateResources.findRoomByName(room.toString()).setLocked(false);
+		}
+	}
+
+	private static void unlockPOI(String poiName) {
+		POI bars = player.getCurrentRoom().getPOIbyName(poiName);
+		bars.setIsHidden(false);
+		bars.setLocked(false);
+	}
+
+	public static void endGame() {
+	    System.out.println("Game Over!");
+	    player.setStatus(RESOURCES.Status.GAMEOVER);
 	}
 
 	private static boolean checkEscapeCondition() {

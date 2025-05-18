@@ -51,6 +51,7 @@ public class RESOURCES {
 		WAKEUP,
 		TUTORIAL,
 		GAMEPLAY,
-		COMPLETE
+		COMPLETE,
+		GAMEOVER
 	}
 }

@@ -147,7 +147,7 @@ public class POI {
                 return i[1];
             }
         }
-        return "You try " + command + " but nothing happens.";
+        return "You try to " + command +" "+this.name+" but nothing happens.";
     }
 
     /**

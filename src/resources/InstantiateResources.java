@@ -31,8 +31,8 @@ public class InstantiateResources {
 		POI wall = new POI("Wall", "Solid stone with one section looking slightly off.");
 		Item thinPick = new Item("Thin Metal Pick", "A sharp sliver of metal — useful for picking locks.");
 		Item looseStone = new Item("Stone", "A fist-sized stone with enough heft to smash things.");
-		wall.addInteraction("examine", "A loose stone catches your attention.");
-		wall.addInteraction("pry with tool", "You pry the stone loose, revealing a [Thin Metal Pick] and [Heavy Stone].");
+		wall.addInteraction("examine", "A loose [Stone] catches your attention.");
+		wall.addInteraction("pry with tool", "You pry the [stone] loose, revealing a [Thin Metal Pick] and [Stone].");
 		wall.addItem(thinPick);
 		wall.addItem(looseStone);
 
@@ -44,7 +44,7 @@ public class InstantiateResources {
 
 		POI drawer = new POI("Drawer", "A broken wooden drawer, stuck tight.");
 		drawer.addInteraction("examine", "The drawer seems stuck, but something's inside.");
-		drawer.addInteraction("use stone", "After two solid strikes, the drawer gives way, revealing a [Locked Box]. However, the stone crumbles apart as well.");
+		drawer.addInteraction("use stone", "After two solid strikes, the drawer gives way, revealing a [Locked Box]. However, the [stone] crumbles apart as well.");
 	
 		POI box = new POI("Locked Box", "A simple locked box.");
 		Item key = new Item("Key", "A small iron key, likely for a door.");
@@ -70,10 +70,10 @@ public class InstantiateResources {
 		cell1Door.setLocked(false);
 		
 		POI cell1Wall = new POI("Wall", "Nothing interesting here");
-		cell1Wall.addInteraction("examine", "Nothing intresting here.");
+		cell1Wall.addInteraction("examine", "Nothing interesting here.");
 
 		POI cell1Floor = new POI("Floor", "Nothing interesting here");
-		cell1Floor.addInteraction("examine", "Nothing intresting here.");
+		cell1Floor.addInteraction("examine", "Nothing interesting here.");
 		
 		
 		POI bucket = new POI("Bucket", "A grimy old bucket.");
@@ -119,7 +119,7 @@ public class InstantiateResources {
 		POI carvings = new POI("Wall", "Faded and unintelligible symbols cover the wall.");
 		carvings.addInteraction("examine", "You approach the walls to better see the carvings. The carvings seem to be in a language you do not understand. They are scattered all across the walls.\n");
 
-		POI cell3floor = new POI("floor", "Dirty and has shreds of cloth and debris, nothing useful for the player.\n");
+		POI cell3floor = new POI("Floor", "Dirty and has shreds of cloth and debris, nothing useful for the player.\n");
 		cell3floor.addInteraction("examine", "You kneel down and see if there is anything of use on the floor. However, all you can find are dust, scraps of cloth, and small chips of either stone or wood. There is nothing of value on the floor.\n");
 		Item debris = new Item("debris", "flamable material");
 		cell3floor.addItem(debris);
@@ -155,7 +155,7 @@ public class InstantiateResources {
 		POI heavyDoor = new POI("Heavy Door", "A reinforced door, locked from the other side.");
 		heavyDoor.addInteraction("examine", "Too solid to break through without heavy equipment.");
 		
-		POI entrenceDoor = new POI("Entrence Door", "Leads back to hallway");
+		POI entrenceDoor = new POI("Entrance Door", "Leads back to hallway");
 		entrenceDoor.setLocked(false);
 
 		POI table = new POI("Table", "A sturdy wooden table with some items on it.");
@@ -204,7 +204,7 @@ public class InstantiateResources {
 
 		// Create POI for cell doors (Each door as a separate POI)
 		POI hallwaycellDoor1 = new POI("Cell 1 Door", "A metal door leading to Cell 1.");
-		hallwaycellDoor1.addInteraction("examine", "This door is locked. You cannot open it without a key.");
+		hallwaycellDoor1.addInteraction("examine", "A metal door leading to Cell 1.");
 		hallwaycellDoor1.addInteraction("use key1", "The door unlocks!  It takes more work than the door from cell 2, but you manage to open the door. However, upon trying to remove the key, it snaps. You’re left with the loop half while the other half is now stuck inside the door.\n");
 		hallwaycellDoor1.addInteraction("Enter Cell 1", "You step inside Cell 1, it’s dimly lit and empty.");
 		Item keyLoop = new Item("Metal key loop", "Broken half of the key");

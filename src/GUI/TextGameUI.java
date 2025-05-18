@@ -324,7 +324,11 @@ public class TextGameUI extends JFrame {
 
     private void processCommand(String command) {
         displayMessage("> " + command);  // Show user input first
-        displayMessage(Driver.processCommand(command));  // Then show the response
+        String message = Driver.processCommand(command);
+        
+        if(message.equals("Game Over")) handleGameOver();
+        
+        displayMessage(message);  // Then show the response
 
         if (user.getStatus().equals(RESOURCES.Status.GAMEPLAY)) {
             registerPOIListeners();
@@ -361,6 +365,11 @@ public class TextGameUI extends JFrame {
             case JOptionPane.CANCEL_OPTION, JOptionPane.CLOSED_OPTION -> {
             }
         }
+    }
+    
+    private void handleGameOver() {
+    	displayMessage("Game Over - You can restart the game!");
+    	inputField.setEditable(false);
     }
     
     private void handleSaveButton() {

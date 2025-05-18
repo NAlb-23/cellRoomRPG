@@ -3,6 +3,7 @@ package resources;
 import java.io.Serializable;
 
 import project_software_engineering.GameLogic;
+import utils.RESOURCES;
 
 /**
  * Manages the player's survival needs such as hunger, thirst, warmth, and energy.
@@ -14,6 +15,13 @@ public class PlayerNeeds{
     private int thirst = 100;
     private double warmth = 100.0;
     private int energy = 100;
+    
+    private int hungerWarningCooldown = 0;
+    private int thirstWarningCooldown = 0;
+    private int warmthWarningCooldown = 0;
+    private int energyWarningCooldown = 0;
+
+    private final int WARNING_COOLDOWN_TICKS = 10; // Number of ticks between warnings
 
     private final int DECAY_RATE = 1;
 
@@ -23,30 +31,52 @@ public class PlayerNeeds{
      */
     public void tick() {
         hunger = Math.max(0, hunger - DECAY_RATE);
-        thirst = Math.max(0, thirst - DECAY_RATE * 2); // Thirst decays faster
-        warmth = Math.max(0, warmth - (DECAY_RATE / 2.0)); // Warmth decays slowly
+        thirst = Math.max(0, thirst - DECAY_RATE * 2);
+        warmth = Math.max(0, warmth - (DECAY_RATE / 2.0));
         energy = Math.max(0, energy - DECAY_RATE);
 
+        if (hungerWarningCooldown > 0) hungerWarningCooldown--;
+        if (thirstWarningCooldown > 0) thirstWarningCooldown--;
+        if (warmthWarningCooldown > 0) warmthWarningCooldown--;
+        if (energyWarningCooldown > 0) energyWarningCooldown--;
+
         checkCriticalNeeds();
+        checkGameOver();
     }
 
     /**
      * Checks for critically low levels of any need and notifies the player through messages.
      */
     private void checkCriticalNeeds() {
-        if (hunger <= 25) {
+        if (hunger <= 25 && hungerWarningCooldown == 0) {
             GameLogic.addMessage("You feel weak from hunger...");
+            hungerWarningCooldown = WARNING_COOLDOWN_TICKS;
         }
-        if (thirst <= 25) {
+        if (thirst <= 25 && thirstWarningCooldown == 0) {
             GameLogic.addMessage("Your mouth is dry. You're dangerously dehydrated.");
+            thirstWarningCooldown = WARNING_COOLDOWN_TICKS;
         }
-        if (warmth <= 25) {
+        if (warmth <= 25 && warmthWarningCooldown == 0) {
             GameLogic.addMessage("You're freezing. You need warmth soon.");
+            warmthWarningCooldown = WARNING_COOLDOWN_TICKS;
         }
-        if (energy <= 25) {
+        if (energy <= 25 && energyWarningCooldown == 0) {
             GameLogic.addMessage("You're utterly exhausted. You should rest.");
+            energyWarningCooldown = WARNING_COOLDOWN_TICKS;
         }
     }
+    
+    /**
+     * Checks if any survival stat has reached zero. If so, ends the game.
+     */
+    private void checkGameOver() {
+        if (hunger == 0 || thirst == 0 || warmth == 0.0 || energy == 0) {
+            GameLogic.addMessage("One of your vital needs has dropped to zero. You collapse...");
+            GameLogic.endGame(); // This method should trigger game over logic in your GameLogic class
+        }
+    }
+
+
 
     /**
      * Increases hunger level by the given amount (e.g., after eating).
@@ -88,6 +118,8 @@ public class PlayerNeeds{
         return String.format("Hunger: %d, Thirst: %d, Warmth: %d, Energy: %d",
                 hunger, thirst, warmth, energy);
     }
+    
+    
 
     // Getters and Setters
 

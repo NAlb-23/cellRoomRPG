@@ -43,6 +43,9 @@ public class Driver {
         	}
         	return result;
         }
+        else if(GameLogic.getPlayer().getStatus() == RESOURCES.Status.GAMEOVER){
+        	return ("Game Over");
+        }
         else {
             if (isTickPending) {
                 GameLogic.getPlayer().tick();
