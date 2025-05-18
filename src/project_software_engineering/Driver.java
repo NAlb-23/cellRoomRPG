@@ -2,7 +2,6 @@ package project_software_engineering;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,11 +14,8 @@ import GUI.MainMenuGUI;
 import GUI.NewGameGUI;
 import GUI.TextGameUI;
 import resources.InstantiateResources;
-import resources.Item;
-import resources.POI;
-import resources.Room;
-import utils.RESOURCES;
 import utils.GameSaver;
+import utils.RESOURCES;
 
 /**
  * The Driver class serves as the entry point for the game.

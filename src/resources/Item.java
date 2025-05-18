@@ -1,7 +1,5 @@
 package resources;
 
-import java.io.Serializable;
-
 /**
  * Represents an interactable item in the game, which can have a name, description, hint, and type.
  */

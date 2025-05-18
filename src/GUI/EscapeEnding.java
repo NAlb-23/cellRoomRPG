@@ -1,17 +1,36 @@
 package GUI;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.text.DefaultCaret;
+
 import utils.GUIBuilder;
 import utils.RESOURCES;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultCaret;
-import java.awt.Graphics;
 
 
 public class EscapeEnding extends JFrame {
 
-    private final JTextArea textArea;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JTextArea textArea;
     private final JButton closeButton;
 
     public EscapeEnding() {
@@ -45,7 +64,12 @@ public class EscapeEnding extends JFrame {
         textArea.setHighlighter(null);
         textArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         textArea.setCaret(new DefaultCaret() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void paint(Graphics g) {
                 // Hides the blinking caret
             }

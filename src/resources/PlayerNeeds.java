@@ -1,9 +1,6 @@
 package resources;
 
-import java.io.Serializable;
-
 import project_software_engineering.GameLogic;
-import utils.RESOURCES;
 
 /**
  * Manages the player's survival needs such as hunger, thirst, warmth, and energy.

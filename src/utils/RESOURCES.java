@@ -3,7 +3,6 @@ package utils;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class RESOURCES {

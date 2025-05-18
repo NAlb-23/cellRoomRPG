@@ -22,7 +22,11 @@ import utils.RESOURCES;
  */
 public class TextGameUI extends JFrame {
 
-    private JPanel mainPanel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel mainPanel;
     private JTextArea textArea;
     private JTextArea userInfo;
     private JTextArea roomInfo;
