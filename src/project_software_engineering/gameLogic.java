@@ -192,10 +192,11 @@ public class GameLogic {
 					if (useCount++ < 1) return "The drawer is starting to crack open, try striking again.";
 					useCount = 0;
 					POI lockedBox = player.getCurrentRoom().getPOIbyName("Locked Box");
+					POI drawer = player.getCurrentRoom().getPOIbyName("Drawer");
 					lockedBox.setIsHidden(false);
-					player.getCurrentRoom().getPOIbyName("Drawer").setIsHidden(true);
+					drawer.setIsHidden(true);
 					player.removeItem(item);
-					return lockedBox.interAct("use stone");
+					return drawer.interAct("use stone");
 				}
 				break;
 
@@ -257,7 +258,7 @@ public class GameLogic {
 				break;
 
 			case "floor":
-				if (roomName.equals(RoomType.CELL_3.toString()) && itemName.equals("bucket")) {
+				if (roomName.equals(RoomType.CELL_3.getRoomName().toLowerCase()) && itemName.equals("bucket")) {
 					player.getCurrentRoom().getPOIbyName("window").setLocked(false);
 					return "You place the bucket on the floor next to the window. It's just high enough for you to reach with a pole.";
 				}
